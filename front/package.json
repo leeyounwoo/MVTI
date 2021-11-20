@@ -1,0 +1,63 @@
+{
+  "name": "final_front",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "animejs": "^3.2.1",
+    "axios": "^0.21.1",
+    "core-js": "^3.6.5",
+    "dompurify": "^2.2.8",
+    "jwt-decode": "^3.1.2",
+    "lodash": "^4.17.21",
+    "luxon": "^1.27.0",
+    "node-sass": "^6.0.0",
+    "sass-loader": "^10.2.0",
+    "swiper": "^5.3.7",
+    "vue": "^2.6.11",
+    "vue-awesome-swiper": "^4.1.1",
+    "vue-dd-form": "^1.0.20",
+    "vue-gravatar": "^1.4.1",
+    "vue-moment": "^4.1.0",
+    "vue-router": "^3.2.0",
+    "vue-star-rating": "^1.7.0",
+    "vuex": "^3.4.0",
+    "vuex-persistedstate": "^4.0.0-beta.3"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-eslint": "~4.5.0",
+    "@vue/cli-plugin-router": "^4.5.13",
+    "@vue/cli-plugin-vuex": "^4.5.13",
+    "@vue/cli-service": "~4.5.0",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^6.7.2",
+    "eslint-plugin-vue": "^6.2.2",
+    "vue-template-compiler": "^2.6.11"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "eslint:recommended"
+    ],
+    "parserOptions": {
+      "parser": "babel-eslint"
+    },
+    "rules": {
+      "no-mixed-spaces-and-tabs": 0
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
