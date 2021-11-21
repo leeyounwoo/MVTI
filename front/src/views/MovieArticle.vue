@@ -7,7 +7,7 @@
 <script>
 import ReviewDetail from '@/components/ReviewDetail'
 export default {
-  name: 'Review',
+  name: 'MovieArticle',
   components : {
     ReviewDetail,
   },

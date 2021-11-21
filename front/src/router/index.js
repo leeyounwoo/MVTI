@@ -1,22 +1,20 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Intro from '@/views/Intro.vue'
 import Movies from '@/views/Movies.vue'
+import MovieDetail from '@/views/MovieDetail.vue'
 import Login from '@/views/Login.vue'
 import Mypage from '@/views/Mypage.vue'
-import MovieDetail from '@/views/MovieDetail.vue'
-import Community from '@/views/Community.vue'
-import Review from '@/views/Review.vue'
+
+import OTTCommunity from '@/views/OTTCommunity.vue'
+import OTTArticle from '@/views/OTTArticle.vue'
+import MovieCommunity from '@/views/MovieCommunity.vue'
+import MovieArticle from '@/views/MovieArticle.vue'
+
 import Tournament from '@/views/Tournament.vue'
 import PageNotFound from '@/views/PageNotFound.vue'
 Vue.use(VueRouter)
 
 const routes = [
-  {
-    path: '/',
-    name: 'Intro',
-    component: Intro
-  },
   {
     path: '/movies',
     name: 'Movies',
@@ -40,15 +38,26 @@ const routes = [
     component: Mypage,
   },
   {
-    path: '/community',
-    name: 'Community',
-    component: Community
+    path: '/OTTcommunity',
+    name: 'OTTCommunity',
+    component: OTTCommunity
   },
   {
-    path: '/community/:detail',
-    name: 'Review',
-    component: Review
+    path: '/OTTcommunity/:detail',
+    name: 'OTTArticle',
+    component: OTTArticle
   },
+  {
+    path: '/Moviecommunity',
+    name: 'MovieCommunity',
+    component: MovieCommunity
+  },
+  {
+    path: '/Moviecommunity/:detail',
+    name: 'MovieArticle',
+    component: MovieArticle
+  },
+
   {
     path: '/tournament',
     name: 'Tournament',

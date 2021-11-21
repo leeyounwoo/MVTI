@@ -1,8 +1,8 @@
 <template>
   <div id="app">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark" id="nav1">
       <div class="container-fluid">
-        <router-link :to="{name: 'Movies'}" class="navbar-brand">MOYA</router-link>
+        <router-link :to="{name: 'Movies'}" class="navbar-brand">MVTI</router-link>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -12,10 +12,10 @@
             <!-- 로그인시 보이는 것 -->
             <span class="navbar-nav" v-if="token">
               <li class="nav-item">
-                <router-link :to="`/tournament`" class="nav-link active">영화월드컵</router-link>
+                <router-link :to="{name: 'MovieCommunity'}" class="nav-link active">영화리뷰</router-link>
               </li>
               <li class="nav-item">
-                <router-link :to="{name: 'Community'}" class="nav-link active">커뮤니티</router-link>
+                <router-link :to="{name: 'OTTCommunity'}" class="nav-link active">OTT모집</router-link>
               </li>
               <li class="nav-item">
                 <router-link :to="`/mypage/${username}`" class="nav-link active">마이페이지</router-link>
@@ -27,7 +27,10 @@
             <!--  로그아웃 시 보이는 것 -->
             <span class="navbar-nav" v-else>
               <li class="nav-item">
-                <router-link :to="{name: 'Community'}" class="nav-link active">커뮤니티</router-link>
+                <router-link :to="{name: 'MovieCommunity'}" class="nav-link active">영화리뷰</router-link>
+              </li>
+              <li class="nav-item">
+                <router-link :to="{name: 'OTTCommunity'}" class="nav-link active">OTT모집</router-link>
               </li>
               <li class="nav-item" >
                 <router-link :to="{name: 'Login'}" class="nav-link active">Login</router-link>
@@ -92,8 +95,9 @@ export default {
   color: #2c3e50;
 }
 
-#nav a.router-link-exact-active {
-  color: #42b983;
+#nav1 .router-link-exact-active {
+  color: #8A2BE2;
+  font-weight: bold;
 }
 
 .navbar-nav .nav-item{

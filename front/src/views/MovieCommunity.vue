@@ -13,7 +13,7 @@ import _ from 'lodash'
 const BACKEND = process.env.VUE_APP_BACKEND_LINK
 
 export default {
-  name: 'Community',
+  name: 'MovieCommunity',
   data: function () {
     return {
       reviews: [],
