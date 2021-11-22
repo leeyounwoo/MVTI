@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+  <title>Document</title>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a href="{% url 'recruits:index' %}">전체 리뷰</a>
+    <a href="{% url 'movies:add_genre' %}">장르 추가</a>
+    <a href="{% url 'movies:add_info' %}">정보 추가</a>
+    <a href="{% url 'movies:ott_info' %}">OTT 추가</a>
+      <div class="container-fluid">
+        {% comment %} <a href="{% url 'movies:index' %}" class="navbar-brand"> MVTI</a> {% endcomment %}
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
+          <ul class="navbar-nav">
+            <!-- 로그인시 보이는 것 -->
+            {% if request.user.is_authenticated %} 
+            <span class="navbar-nav">
+            
+              <li class="nav-item">
+                {% comment %} <a href="{% url 'reviews:index' %}" class="nav-link active">영화리뷰</a> {% endcomment %}
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'recruits:index' %}" class="nav-link active">OTT모집</a>
+
+              </li>
+              <li class="nav-item">
+                {% comment %} <a href="{% url 'recruits:index' %}" class="nav-link active">마이페이지</a> {% endcomment %}
+                
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'accounts:logout' %}" class="nav-link active">로그아웃</a>
+              </li>
+            </span>
+            {% else %}
+            <!--  로그아웃 시 보이는 것 -->
+            <span class="navbar-nav">
+              <li class="nav-item">
+                {% comment %} <a href="{% url 'reviews:index' %}" class="nav-link active">영화리뷰</a> {% endcomment %}
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'recruits:index' %}" class="nav-link active">OTT모집</a>
+              </li>
+              <li class="nav-item" >
+                <a href="{% url 'accounts:login' %}" class="nav-link active">로그인</a>
+              </li>
+            </span>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+  {% block content %}
+  {% endblock content %}
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <!-- Vue CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  {% block script %}
+  {% endblock script %}
+</body>
+</html>

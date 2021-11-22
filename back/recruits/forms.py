@@ -6,7 +6,7 @@ class RecruitForm(forms.ModelForm):
 
     class Meta:
         model = Recruit
-        fields = ('title', 'content', 'max_cnt',)
+        fields = ('title', 'content', 'max_cnt', 'public_id', 'public_pw',)
 
 class CommentForm(forms.ModelForm):
     content = forms.CharField(

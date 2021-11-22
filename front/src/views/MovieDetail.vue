@@ -3,8 +3,8 @@
     <MovieDetailMain :movie="movie"/>
     <iframe width="100%" height="700px" :src="movie | videoURL" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     <div class="section">
-      <div class="section-header">비슷한 장르 영화 추천</div>
-      <MovieCarousel :movies="same_genres"/>
+      <div class="section-header">비슷한 콘텐츠</div>
+      <MovieCarousel :movies="similar_movies"/>
     </div>
   </div>
 </template>
@@ -37,18 +37,12 @@ export default {
         .then((res) => {
           console.log(res)
           this.movie = res.data['movie'][0]
-          this.same_genres = res.data.same_genres
+          this.similar_movies = res.data.similar_movies
         })
         .catch(() => {
           alert("없는 영화 정보입니다.")
           this.$router.push({name : 'Movies'})
         })
-    }
-  },
-  filters : {
-    videoURL : function(movie) {
-      const youtubeURL = "https://www.youtube.com/embed/"
-      return youtubeURL+movie.video_path
     }
   },
   created : function(){

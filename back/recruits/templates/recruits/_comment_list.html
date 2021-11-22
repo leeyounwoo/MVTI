@@ -1,0 +1,19 @@
+<ul>
+{% for comment in recruit.comment_set.all %}
+  <li>
+    <a href="">
+      {{ comment.author }}
+    </a>: {{ comment.content }}
+    
+    {% if request.user == comment.author %}
+    <form style="display: inline-block;" action="{% url 'recruits:delete_comment' recruit.pk comment.pk %}" method="POST">
+      {% csrf_token %}
+      <button>삭제</button>
+    </form>
+    {% endif %}
+
+  </li>
+{% empty %}
+  <li>첫 댓글을 달아주세요!</li>
+{% endfor %}
+</ul>

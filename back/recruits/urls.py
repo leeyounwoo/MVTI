@@ -5,6 +5,10 @@ from . import views
 app_name = 'recruits'
 urlpatterns = [
     path('', views.index, name='index'),
+    path('<int:recruit_pk>/pay/', views.pay, name='pay'),
+    path('<int:recruit_pk>/pay/approval/', views.approval, name='approval'),
+    path('<int:recruit_pk>/pay/fail/', views.fail, name='fail'),
+    path('<int:recruit_pk>/pay/cancel/', views.cancel, name='cancel'),
     path('create/', views.create, name='create'),
     path('<int:pk>/', views.detail, name='detail'),
     path('<int:pk>/delete/', views.delete, name='delete'),
