@@ -13,6 +13,7 @@ class Ott(models.Model):
     image = models.TextField(null=True)
 
 class Movie(models.Model):
+    idx = models.IntegerField()
     title = models.CharField(max_length=100)
     eng_title = models.CharField(max_length=100)
     overview = models.TextField()
