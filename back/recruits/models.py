@@ -12,7 +12,8 @@ class Recruit(models.Model):
     updated_at = DateTimeField(auto_now=True)
     max_cnt = IntegerField()
     current_cnt = IntegerField(default=1)
-
+    public_id = models.CharField(max_length=20)
+    public_pw = models.CharField(max_length=20)
     def __str__(self):
         return self.title
 

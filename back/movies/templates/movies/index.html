@@ -1,0 +1,84 @@
+<link rel="stylesheet" href="/static/css/movies_index.css">
+{% extends 'base.html' %}
+
+{% block content %}
+<div id="movies">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <a href="#" @click="switchSlidMovie(netflix_movies)" class="nav-link button-slider-active button-slider" data-menu="1">Netflix</a>
+          <a href="#" @click="switchSlidMovie(disney_movies)" class="nav-link button-slider" data-menu="2">Disney +</a>
+          <a href="#" @click="switchSlidMovie(hulu_movies)" class="nav-link button-slider" data-menu="3">hulu</a>
+          <a href="#" @click="switchSlidMovie(mvti_movies)" class="nav-link button-slider" data-menu="4">내 MVTI 추천영화</a>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+</div>
+{% endblock content %}
+{% block script %}
+<script>
+  var menuLinks = document.querySelectorAll('.button-slider');
+
+  function clickMenuHandler() { 
+    for (var i = 0; i < menuLinks.length; i++){
+      menuLinks[i].classList.remove('button-slider-active');
+
+    } 
+    this.classList.add('button-slider-active');
+
+  }
+
+  for (var i = 0; i < menuLinks.length; i++){
+    menuLinks[i].addEventListener('click', clickMenuHandler);
+  }
+
+
+  const app = new Vue({
+    el: '#movies',
+    
+    data: {
+      selected_movies: [],
+      netflix_movies : [],
+      disney_movies: [],
+      hulu_movies: [],
+      mvti_movies: [],
+      popular_movies: [],
+      // first_genre: '',
+      // first_genre_movies: [],
+      // secound_genre: '',
+      // secound_genre_movies: [],
+    },
+    methods: {
+      getMovies : function() {
+        axios.get('http://127.0.0.1:8000/movies/')
+          .then(res =>{
+            console.log(res)
+            this.selected_movies = res.data.netflix_movies
+            this.netflix_movies = res.data.netflix_movies
+            this.disney_movies = res.data.disney_movies
+            this.hulu_movies = res.data.hulu_movies
+            // this.mvti_movies = res.data.mvti_movies
+            this.popular_movies = res.data.popular_movies
+            // this.first_genre = res.data.first_genre
+            // this.first_genre_movies = res.data.first_genre_movies
+            // this.secound_genre = res.data.secound_genre
+            // this.secound_genre_movies = res.data.secound_genre_movies
+          })
+          .catch(error => {
+            alert('에러')
+          })
+      },
+      switchSlidMovie: function(select_movie) {
+        this.selected_movies = select_movie
+      }
+    },
+    created: function() {
+      this.getMovies()
+    }
+  })
+
+</script>
+{% endblock %}

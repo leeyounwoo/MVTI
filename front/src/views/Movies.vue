@@ -1,19 +1,17 @@
 <template>
   <div class="main">
-    <ul>
-      <li>
-        <a href="" @click="switchSlidMovie(netflix_movies)">Netflix</a>
-      </li>
-      <li>
-        <a href="" @click="switchSlidMovie(disney_movies)">Disney +</a>
-      </li>
-      <li>
-        <a href="" @click="switchSlidMovie(hulu_movies)">hulu</a>
-      </li>
-      <li>
-        <a href="" @click="switchSlidMovie(mvti_movies)">내 MVTI 추천영화</a>
-      </li>
-    </ul>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <a @click="switchSlidMovie(netflix_movies)" class="nav-link button-slider-active button-slider" data-menu="1">Netflix</a>
+            <a @click="switchSlidMovie(disney_movies)" class="nav-link button-slider" data-menu="2">Disney +</a>
+            <a @click="switchSlidMovie(hulu_movies)" class="nav-link button-slider" data-menu="3">hulu</a>
+            <a @click="switchSlidMovie(mvti_movies)" class="nav-link button-slider" data-menu="4">내 MVTI 추천영화</a>
+          </ul>
+        </div>
+      </div>
+    </nav>
     <MoviesSlider :movies="selected_movies"/>
 
     <div class="section">
@@ -50,12 +48,12 @@ export default {
       netflix_movies : [],
       disney_movies: [],
       hulu_movies: [],
-      mvti_movies: [],
+      // mvti_movies: [],
       popular_movies: [],
-      first_genre: '',
-      first_genre_movies: [],
-      secound_genre: '',
-      secound_genre_movies: [],
+      // first_genre: '',
+      // first_genre_movies: [],
+      // secound_genre: '',
+      // secound_genre_movies: [],
     }
   },
   methods : {
@@ -63,16 +61,21 @@ export default {
       const link = 'movies'
       axios.get(BACKEND+link)
         .then(res =>{
+          console.log(res.data)
           this.selected_movies = res.data.netflix_movies
           this.netflix_movies = res.data.netflix_movies
           this.disney_movies = res.data.disney_movies
           this.hulu_movies = res.data.hulu_movies
-          this.mvti_movies = res.data.mvti_movies
+          // this.mvti_movies = res.data.mvti_movies
           this.popular_movies = res.data.popular_movies
-          this.first_genre = res.data.first_genre
-          this.first_genre_movies = res.data.first_genre_movies
-          this.secound_genre = res.data.secound_genre
-          this.secound_genre_movies = res.data.secound_genre_movies
+          // this.first_genre = res.data.first_genre
+          // this.first_genre_movies = res.data.first_genre_movies
+          // this.secound_genre = res.data.secound_genre
+          // this.secound_genre_movies = res.data.secound_genre_movies
+        })
+        .catch(error=> {
+          alert(error)
+          console.log(BACKEND+link)
         })
     },
     switchSlidMovie: function(select_movie) {

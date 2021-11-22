@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Recruits</h1>
+  <a href="{% url 'recruits:create' %}">새로운 모집</a>
+  {% for recruit in recruits %}
+    <a href="{% url 'recruits:detail' recruit.pk %}">{{ recruit.title }}</a>
+    <p>작성자: {{ recruit.author.username }} </p>
+    <p>모집 인원: {{ recruit.current_cnt}} / {{ recruit.max_cnt }}</p>
+    <hr>
+  {% endfor %}
+{% endblock content %}
