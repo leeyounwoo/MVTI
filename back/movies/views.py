@@ -1,4 +1,3 @@
-from django.db.models.base import ModelStateFieldsCacheDescriptor
 from django.shortcuts import render, redirect
 import requests
 import json
@@ -51,6 +50,21 @@ def index(request) :
     }
     return JsonResponse(context)
 
+def detail(request, movie_pk):
+    movie = Movie.objects.get(pk=movie_pk)
+    url = f'https://api.themoviedb.org/3/movie/{movie.idx}/similar?api_key=1b7edbdee7b82ec37e80ba4d2b36db68&language=ko-KR&page=1'
+    res = requests.get(url)
+    similars = res.json().get('results')
+    movies = []
+    for similar in similars:
+        movie = Movie.objects.filter(title = similar['title'], released_date = similar['release_date']).first()
+        if movie != None:
+            movies.append(movie)
+            print(movie.title)
+    context={
+        'similar_movies' : movies
+    }
+    return render(request, 'movies/detail.html', context)
 
 def add_genre(request):
     url = "https://api.themoviedb.org/3/genre/movie/list?api_key=1b7edbdee7b82ec37e80ba4d2b36db68"
@@ -81,6 +95,7 @@ def add_info(request):
             #     infos[i]['vote_count'])
         
             Movie(
+                idx = infos[i]['id'],
                 title = infos[i]['title'],
                 eng_title = infos[i]['original_title'],
                 overview = infos[i]['overview'],
@@ -142,4 +157,4 @@ def ott_info(request):
             print(movie.title)
             ott = Ott.objects.get(name = 'Hulu')
             movie.movie_ott.add(ott)
-    return redirect('recruits:index')    
+    return redirect('recruits:index')

@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Movies</h1>
+  {% for movie in similar_movies %}
+    <p>제목: {{ movie.title }} </p>
+    
+    <form action="{% url 'reviews:create' movie.pk %}" method="GET">
+      <button class="btn">리뷰 작성</button>
+    </form>
+  {% endfor %}
+{% endblock content %}
