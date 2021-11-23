@@ -2,15 +2,15 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Movies from '@/views/Movies.vue'
 // import MovieDetail from '@/views/MovieDetail.vue'
-// import Login from '@/views/Login.vue'
-// import Mypage from '@/views/Mypage.vue'
+import Login from '@/views/Login.vue'
+import Mypage from '@/views/Mypage.vue'
 
 // import OTTCommunity from '@/views/OTTCommunity.vue'
 // import OTTArticle from '@/views/OTTArticle.vue'
 // import MovieCommunity from '@/views/MovieCommunity.vue'
 // import MovieArticle from '@/views/MovieArticle.vue'
 
-// import Tournament from '@/views/Tournament.vue'
+import Tournament from '@/views/Tournament.vue'
 // import PageNotFound from '@/views/PageNotFound.vue'
 Vue.use(VueRouter)
 
@@ -25,18 +25,18 @@ const routes = [
   //   name: 'MovieDetail',
   //   component: MovieDetail
   // },
-  // {
-  //   path: '/login',
-  //   name: 'Login',
-  //   component: Login,
-  //   props: true
-  // },
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login,
+    props: true
+  },
   
-  // {
-  //   path:'/mypage/:username',
-  //   name:'Mypage',
-  //   component: Mypage,
-  // },
+  {
+    path:'/mypage/:username',
+    name:'Mypage',
+    component: Mypage,
+  },
   // {
   //   path: '/OTTcommunity',
   //   name: 'OTTCommunity',
@@ -58,11 +58,11 @@ const routes = [
   //   component: MovieArticle
   // },
 
-  // {
-  //   path: '/tournament',
-  //   name: 'Tournament',
-  //   component: Tournament
-  // },
+  {
+    path: '/tournament',
+    name: 'Tournament',
+    component: Tournament
+  },
   // {
   //   path: '/404',
   //   name: '404Page',

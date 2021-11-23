@@ -35,3 +35,8 @@ class Movie(models.Model):
         blank=True,
         null=True,
     )
+
+class Tournament(models.Model) :
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='tournaments')
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)

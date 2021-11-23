@@ -1,16 +1,18 @@
 from django.shortcuts import render, redirect
 import requests
 import json
-from .models import Movie, Genre, Ott
+from .models import Movie, Genre, Ott, Tournament
 import csv
-
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from .serializers import MovieSerializer
+from .serializers import MovieSerializer, TournamentSerializer
 from django.http.response import JsonResponse
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+from django.shortcuts import get_object_or_404
+from django.contrib.auth import get_user_model
 
 # from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
@@ -157,4 +159,48 @@ def ott_info(request):
             print(movie.title)
             ott = Ott.objects.get(name = 'Hulu')
             movie.movie_ott.add(ott)
-    return redirect('recruits:index')
+    return redirect('recruits:index')    
+
+
+@api_view(['GET', 'POST'])
+@authentication_classes([JSONWebTokenAuthentication])
+@permission_classes([IsAuthenticated])
+def tournament(request) :
+    if request.method == 'GET' :
+        random_movies = Movie.objects.order_by('?')[:16]
+        serializer = MovieSerializer(data = random_movies, many=True)
+        print(serializer.is_valid())
+        return Response(serializer.data)
+    elif request.method =='POST' : 
+        # 작업중
+        movie_id = request.data["movie_id"]
+        user = request.user
+        print(user)
+        movie = Movie.objects.get(pk=movie_id)
+        tournament = Tournament.objects.create(
+            movie = movie, 
+            user = request.user
+        )
+
+        serializer = TournamentSerializer(data= tournament)
+        print(serializer.is_valid())
+        return Response(serializer.data)
+
+
+@api_view(['GET'])
+def mypageMovie(request, username) :
+    person = get_object_or_404(get_user_model(), username=username)
+    winMovies = Movie.objects.filter(tournament__user=person).order_by('-tournament__created_at') # OneToMany 접근
+    # likeMovies = Review.objects.filter(user=person).filter(liked=True).order_by('-created_at')
+    # likeMovies = Movie.objects.filter(review__user=person).distinct()
+
+    winMoviesSerializer = MovieSerializer(data = winMovies, many=True)
+    # likeMoviesSerializer = MovieSerializer(data= likeMovies, many=True)
+
+    print(winMoviesSerializer.is_valid())
+    context = {
+        'winMovies' : winMoviesSerializer.data, 
+        # 'likeMovies' : likeMoviesSerializer.data
+    }
+    return Response(context)
+

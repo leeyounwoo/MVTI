@@ -49,6 +49,11 @@
 </template>
 <script>
 import jwt_decode from "jwt-decode";
+import Vue from 'vue'
+import { BButton, BSidebar } from 'bootstrap-vue'
+Vue.component('b-button', BButton)
+Vue.component('b-sidebar', BSidebar)
+
 export default {
   
   name: 'App',
