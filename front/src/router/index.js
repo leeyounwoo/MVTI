@@ -5,7 +5,9 @@ import Movies from '@/views/Movies.vue'
 import Login from '@/views/Login.vue'
 import Mypage from '@/views/Mypage.vue'
 
-// import OTTCommunity from '@/views/OTTCommunity.vue'
+import Recruit from '@/views/Recruit.vue'
+import RecruitForm from '@/components/RecruitForm.vue'
+import RecruitArticleDetail from '@/components/RecruitArticleDetail.vue'
 // import OTTArticle from '@/views/OTTArticle.vue'
 // import MovieCommunity from '@/views/MovieCommunity.vue'
 // import MovieArticle from '@/views/MovieArticle.vue'
@@ -37,11 +39,21 @@ const routes = [
     name:'Mypage',
     component: Mypage,
   },
-  // {
-  //   path: '/OTTcommunity',
-  //   name: 'OTTCommunity',
-  //   component: OTTCommunity
-  // },
+  {
+    path: '/recruits',
+    name: 'Recruit',
+    component: Recruit
+  },
+  {
+    path: '/recruits/create',
+    name: 'RecruitForm',
+    component: RecruitForm
+  },
+  {
+    path: '/recruits/:recruitId',
+    name: 'RecruitArticleDetail',
+    component: RecruitArticleDetail
+  },
   // {
   //   path: '/OTTcommunity/:detail',
   //   name: 'OTTArticle',

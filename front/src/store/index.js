@@ -18,9 +18,11 @@ export default new Vuex.Store({
     LOGIN : function(state, res) {
       const token = res.data.token
       state.token = token
+      localStorage.setItem('jwt', token)
     },
     LOGOUT : function(state) {
       state.token =''
+      localStorage.removeItem('jwt')
     },
     SETNEXTPAGE : function(state, res){
       state.nextPage=res.name,

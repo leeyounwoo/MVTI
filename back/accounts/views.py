@@ -10,6 +10,7 @@ from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import get_user_model
 from django.http.response import JsonResponse
+import urllib, hashlib # gravatar library
 
 @api_view(['POST'])
 def signup(request):
@@ -35,28 +36,7 @@ def signup(request):
     # password는 직렬화 과정에는 포함 되지만 → 표현(response)할 때는 나타나지 않는다.
     return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-@api_view(['POST'])
-@authentication_classes([JSONWebTokenAuthentication])
-@permission_classes([IsAuthenticated])
-def follow(request, username):
 
-    person = get_object_or_404(get_user_model(), username=username)
-    user = request.user
-    if person != user:
-        if person.followers.filter(pk=user.pk).exists():
-            person.followers.remove(user)
-            follow = True
-        else:
-            person.followers.add(user)
-            follow = False
-        follow_status ={
-            'follow':follow,
-            'count':person.followers.count(),
-        }
-        return JsonResponse(follow_status)
-    # return redirect('accounts:profile', person.username)
-# import code for encoding urls and generating md5 hashes
-import urllib, hashlib # gravatar library
 
 @api_view(['get'])
 @authentication_classes([JSONWebTokenAuthentication])

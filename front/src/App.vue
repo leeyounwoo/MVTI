@@ -12,10 +12,10 @@
             <!-- 로그인시 보이는 것 -->
             <span class="navbar-nav" v-if="token">
               <li class="nav-item">
-                <router-link :to="{name: 'MovieCommunity'}" class="nav-link active">영화리뷰</router-link>
+                <router-link :to="{name: ''}" class="nav-link active">영화리뷰</router-link>
               </li>
               <li class="nav-item">
-                <router-link :to="{name: 'OTTCommunity'}" class="nav-link active">OTT모집</router-link>
+                <router-link :to="{name: 'Recruit'}" class="nav-link active">OTT모집</router-link>
               </li>
               <li class="nav-item">
                 <router-link :to="`/mypage/${username}`" class="nav-link active">마이페이지</router-link>
@@ -30,7 +30,7 @@
                 <router-link :to="{name: 'MovieCommunity'}" class="nav-link active">영화리뷰</router-link>
               </li>
               <li class="nav-item">
-                <router-link :to="{name: 'OTTCommunity'}" class="nav-link active">OTT모집</router-link>
+                <router-link :to="{name: 'Recruit'}" class="nav-link active">OTT모집</router-link>
               </li>
               <li class="nav-item" >
                 <router-link :to="{name: 'Login'}" class="nav-link active">Login</router-link>

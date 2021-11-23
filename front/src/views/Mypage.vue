@@ -1,24 +1,27 @@
 <template>
   <div class="main" style="padding-top:55px;">
     <userInformation/>
-    <div class="section">
-      <div>
-      <h1 class="font_style" style="text-align:left">🌈영화월드컵 우승작</h1>
-      <img :src="`https://image.tmdb.org/t/p/original${win_movies[0].poster_path}`" alt="">
       
+    <div>
+      <h2 class="else-movieslide">인기 영화</h2><hr>
+      <carousel-3d :disable3d="true" :space="230" :clickable="false" :controls-visible="true" :width="200" :height="270" :autoplay="true" :autoplay-timeout="3000">
+        <slide v-for="(slide_2d, i) in slides_2d" :key="i" :index="i">
+          <img 
+            :src="`https://image.tmdb.org/t/p/original${win_movies[i].poster_path}`" alt="poster" style="width:100%; height:100%; cursor: pointer;" class="">
+        </slide>
+      </carousel-3d>
     </div>
-    <br><br><br><br><br>
-    </div>
-
+    
   </div>
 </template>
 <script>
 import userInformation from '@/components/userInformation'
 import movieMixin from "@/mixins/movieMixin"
 import axios from 'axios'
-// import Vue from 'vue'
-// import { Carousel3d, Slide } from 'vue-carousel-3d';
-// Vue.use('Carousel3d')
+
+import Vue from 'vue'
+import { Carousel3d, Slide } from 'vue-carousel-3d';
+Vue.use('Carousel3d')
 
 const BACKEND = process.env.VUE_APP_BACKEND_LINK
 
@@ -27,14 +30,15 @@ export default {
   name:'Mypage',
   components:{
     userInformation,
-    // Carousel3d,
-    // Slide,
+    Carousel3d,
+    Slide,
   },
   mixins : [movieMixin],
   data : function(){
     return {
       win_movies : [],
-      // like_movies : [],
+      slides: 0,
+      slides_2d: 0,
     }
   },
   methods : {
@@ -46,8 +50,9 @@ export default {
         .then(res => {
           console.log(res)
           this.win_movies = res.data.winMovies
+          this.slides = this.win_movies.length
+          this.slides_2d = this.win_movies.length
           console.log(this.win_movies)
-          // this.like_movies = res.data.likeMovies
         })
         .catch(() =>{
           console.log(this.$route.params.username)
