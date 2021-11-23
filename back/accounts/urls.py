@@ -1,14 +1,12 @@
 from django.urls import path
 from . import views
+from rest_framework_jwt.views import obtain_jwt_token
 
 app_name = 'accounts'
 
 urlpatterns = [
     path('signup/', views.signup, name='signup'),
-    path('login/', views.login, name='login'),
-    path('logout/', views.logout, name='logout'),
-    path('<str:username>/update/', views.update, name='update'),
-    path('quit/', views.quit, name='quit'),
-    # path('<str:username>/profile/', views.profile, name='profile'),
+    path('login/', obtain_jwt_token),
+    path('<str:username>/', views.profile, name='profile'),
 ]
  

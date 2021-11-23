@@ -12,9 +12,7 @@
         </div>
       </div>
     </nav>
-    <MoviesSlider :movies="selected_movies"/>
     <div>
-      <h1 class="font_style" style="text-align:left">🌈오늘의 Movit's Pick</h1>
       <carousel-3d :autoplay="true" :autoplay-timeout="3000" :display="11" :width="400" :height="600">
         <slide v-for="(slide, i) in slides" :key="i" :index="i">
           <img 
@@ -58,7 +56,6 @@
 
 <script>
 import axios from 'axios'
-import MoviesSlider from '@/components/MoviesSlider.vue'
 
 import Vue from 'vue'
 import { Carousel3d, Slide } from 'vue-carousel-3d';
@@ -68,7 +65,6 @@ const BACKEND = process.env.VUE_APP_BACKEND_LINK
 export default {
   name : 'Movies',
   components : {
-    MoviesSlider,
     Carousel3d,
     Slide,
   },
