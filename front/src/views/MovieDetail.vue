@@ -18,7 +18,6 @@
           <hr>
           <br>
           <div class="p-3">
-            <p>댓글들{{movie.review_set}}</p>
             <h2><strong>영화 한줄평</strong></h2>
             <ul v-for="review in movie.review_set" :key="review.id">
               <span class="m-2">
