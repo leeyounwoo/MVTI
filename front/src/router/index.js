@@ -1,98 +1,100 @@
 import Vue from 'vue'
-import VueRouter from 'vue-router'
+import Router from 'vue-router'
 import Movies from '@/views/Movies.vue'
-// import MovieDetail from '@/views/MovieDetail.vue'
+import MovieDetail from '@/views/MovieDetail.vue'
 import Login from '@/views/Login.vue'
 import Mypage from '@/views/Mypage.vue'
-
 import Recruit from '@/views/Recruit.vue'
 import RecruitForm from '@/components/RecruitForm.vue'
 import RecruitArticleDetail from '@/components/RecruitArticleDetail.vue'
-// import OTTArticle from '@/views/OTTArticle.vue'
-// import MovieCommunity from '@/views/MovieCommunity.vue'
-// import MovieArticle from '@/views/MovieArticle.vue'
-
 import Tournament from '@/views/Tournament.vue'
-// import PageNotFound from '@/views/PageNotFound.vue'
-Vue.use(VueRouter)
 
-const routes = [
+Vue.use(Router)
+
+export const constantRoutes = [
   {
     path: '/movies',
     name: 'Movies',
-    component: Movies
+    component: Movies,
+    meta: {
+      title: "MVTI"
+    },
   },
-  // {
-  //   path: '/movies/:movie_pk',
-  //   name: 'MovieDetail',
-  //   component: MovieDetail
-  // },
+  {
+    path: '/movies/:movie_pk',
+    name: 'MovieDetail',
+    component: MovieDetail,
+    meta: {
+      title: "Movie Detail"
+    },
+  },
   {
     path: '/login',
     name: 'Login',
     component: Login,
-    props: true
+    props: true,
+    meta: {
+      title: "Login"
+    },
   },
   
   {
     path:'/mypage/:username',
     name:'Mypage',
     component: Mypage,
+    meta: {
+      title: "My Page"
+    },
   },
   {
     path: '/recruits',
     name: 'Recruit',
-    component: Recruit
+    component: Recruit,
+    meta: {
+      title: "OTT 모집 게시판"
+    },
   },
   {
     path: '/recruits/create',
     name: 'RecruitForm',
-    component: RecruitForm
+    component: RecruitForm,
+    meta: {
+      title: "OTT 모집 게시글 작성"
+    },
   },
   {
     path: '/recruits/:recruitId',
     name: 'RecruitArticleDetail',
-    component: RecruitArticleDetail
+    component: RecruitArticleDetail,
+    meta: {
+      title: "OTT 모집 게시글"
+    },
   },
-  // {
-  //   path: '/OTTcommunity/:detail',
-  //   name: 'OTTArticle',
-  //   component: OTTArticle
-  // },
-  // {
-  //   path: '/Moviecommunity',
-  //   name: 'MovieCommunity',
-  //   component: MovieCommunity
-  // },
-  // {
-  //   path: '/Moviecommunity/:detail',
-  //   name: 'MovieArticle',
-  //   component: MovieArticle
-  // },
-
   {
     path: '/tournament',
     name: 'Tournament',
-    component: Tournament
+    component: Tournament,
+    meta: {
+      title: "이상형 월드컵"
+    },
   },
-  // {
-  //   path: '/404',
-  //   name: '404Page',
-  //   component: PageNotFound
-  // },
-  // {
-  //   path : '*',
-  //   redirect : '/404'
-  // }
 ]
 
-const router = new VueRouter({
+const createRouter = () => new Router({
   mode: 'history',
+  scrollBehavior: () => ({ y: 0 }),
   base: process.env.BASE_URL,
-  routes
+  routes: constantRoutes
 })
-router.afterEach(() => {
-  window.scrollTo(0,0);
-})
+
+const router = createRouter()
+
+router.afterEach((to) => {
+  const title = to.meta.title === undefined ? 'MVTI' : to.meta.title;
+  Vue.nextTick(() => {
+    document.title = title;
+  });
+});
+
 export default router
 

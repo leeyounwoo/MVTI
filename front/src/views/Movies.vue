@@ -12,15 +12,25 @@
         </div>
       </div>
     </nav>
+    
     <div>
-      <carousel-3d :autoplay="true" :autoplay-timeout="3000" :display="11" :width="400" :height="600">
+      <carousel-3d :autoplay="true" :autoplay-timeout="3000" :display="11" :width="400" :height="600" >
         <slide v-for="(slide, i) in slides" :key="i" :index="i">
-          <img 
-            :src="`https://image.tmdb.org/t/p/original${selected_movies[i].poster_path}`"
-            alt="image"
-            style="width:100%; height:100%; cursor: pointer;"
-            class="imggroup2"
-          >
+          <div class="imggroup">
+            <img 
+              :src="`https://image.tmdb.org/t/p/original${selected_movies[i].poster_path}`"
+              alt="image"
+              style="width:100%; height:100%; cursor: pointer;"
+            >
+            <star-rating style="position: absolute; top: 0px; text-align: center; size: 50%;}" :rating="parseFloat(popular_movies[i].vote_average) / 2" :read-only="true" :increment="0.01"/>
+            <button 
+              class="imggroup-button1"
+              @click="goToMovieDetail(selected_movies[i])"
+            >Detail</button>
+          </div>
+  
+            
+
         </slide>
       </carousel-3d>
     </div>
@@ -31,7 +41,16 @@
       <carousel-3d :disable3d="true" :space="230" :clickable="false" :controls-visible="true" :width="200" :height="270" :autoplay="true" :autoplay-timeout="3000">
         <slide v-for="(slide_2d, i) in slides_2d" :key="i" :index="i">
           <img 
-            :src="`https://image.tmdb.org/t/p/original${popular_movies[i].poster_path}`" alt="poster" style="width:100%; height:100%; cursor: pointer;" class="imggroup">
+            :src="`https://image.tmdb.org/t/p/original${popular_movies[i].poster_path}`" 
+            alt="poster" 
+            style="width:100%; height:100%; cursor: pointer;" 
+            class="imggroup"
+          >
+          <star-rating v-bind:star-size="30" style="position: absolute; top: 0px; text-align: center; size: 50%;}" :rating="parseFloat(popular_movies[i].vote_average) / 2" :read-only="true" :increment="0.01"/>
+            <button 
+              class="imggroup-button2"
+              @click="goToMovieDetail(popular_movies[i])"
+            >Detail</button>
         </slide>
       </carousel-3d>
     </div>
@@ -56,6 +75,7 @@
 
 <script>
 import axios from 'axios'
+import StarRating from 'vue-star-rating'
 
 import Vue from 'vue'
 import { Carousel3d, Slide } from 'vue-carousel-3d';
@@ -65,6 +85,7 @@ const BACKEND = process.env.VUE_APP_BACKEND_LINK
 export default {
   name : 'Movies',
   components : {
+    StarRating,
     Carousel3d,
     Slide,
   },
@@ -111,7 +132,13 @@ export default {
     },
     switchSlidMovie: function(select_movie) {
       this.selected_movies = select_movie
-    }
+    },
+
+    goToMovieDetail: function(movie) {
+      this.$router.push({
+        path: `/movies/${movie.id}`
+      })
+    },
 
   },
   created : function(){
@@ -142,5 +169,25 @@ export default {
 }
 .else-movieslide {
   color: #8A2BE2;
+}
+
+.imggroup {
+  position: relative;
+}
+.imggroup-button1 {
+  position: absolute; 
+  left:50%; 
+  bottom: 30%; 
+  margin-left:-20px;
+}
+
+
+
+.imggroup-button2 {
+  position: absolute;
+   left:50%; 
+   bottom: 30%; 
+   margin-left:-20px; 
+   width: 30%;
 }
 </style>

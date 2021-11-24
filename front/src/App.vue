@@ -12,7 +12,7 @@
             <!-- 로그인시 보이는 것 -->
             <span class="navbar-nav" v-if="token">
               <li class="nav-item">
-                <router-link :to="{name: ''}" class="nav-link active">영화리뷰</router-link>
+                <router-link :to="{name: 'Tournament'}" class="nav-link active">이상형 월드컵</router-link>
               </li>
               <li class="nav-item">
                 <router-link :to="{name: 'Recruit'}" class="nav-link active">OTT모집</router-link>
@@ -27,7 +27,7 @@
             <!--  로그아웃 시 보이는 것 -->
             <span class="navbar-nav" v-else>
               <li class="nav-item">
-                <router-link :to="{name: 'MovieCommunity'}" class="nav-link active">영화리뷰</router-link>
+                <router-link :to="{name: 'Tournament'}" class="nav-link active">이상형 월드컵</router-link>
               </li>
               <li class="nav-item">
                 <router-link :to="{name: 'Recruit'}" class="nav-link active">OTT모집</router-link>
