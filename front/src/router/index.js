@@ -8,10 +8,16 @@ import Recruit from '@/views/Recruit.vue'
 import RecruitForm from '@/components/RecruitForm.vue'
 import RecruitArticleDetail from '@/components/RecruitArticleDetail.vue'
 import Tournament from '@/views/Tournament.vue'
+import Approval from '@/components/Approval.vue'
 
 Vue.use(Router)
 
 export const constantRoutes = [
+  {
+    path: '/:recruitId/approval',
+    name: 'Approval',
+    component: Approval
+  },
   {
     path: '/movies',
     name: 'Movies',
