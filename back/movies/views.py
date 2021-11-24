@@ -56,36 +56,37 @@ def index(request) :
 
 @api_view(['GET'])
 def movie_detail(request, movie_pk) :
+    # 상세페이지에서 보고 있는 영화
     movie = Movie.objects.get(pk=movie_pk)
     movie_list = [movie]
     serializer = MovieDetailSerializer(data = movie_list, many=True)
-    
+
+    # TMDB에서 제공하는 비슷한 콘텐츠
+    movies = []
     url = f'https://api.themoviedb.org/3/movie/{movie.idx}/similar?api_key=1b7edbdee7b82ec37e80ba4d2b36db68&language=ko-KR&page=1'
     res = requests.get(url)
     similars = res.json().get('results')
-    # print(similars)
-    movies = []
     for similar in similars:
-        movie1 = Movie.objects.filter(title = similar['title'], released_date = similar['release_date']).first()
-        if movie1 != None:
-            movies.append(movie1)
-            print(movie1.title)
+        temp_movie = Movie.objects.filter(title = similar['title'], released_date = similar['release_date']).first()
+        if temp_movie != None:
+            movies.append(temp_movie)
+
+    # TMDB에서 제공하는 콘텐츠의 수
     movies_length = len(movies)
     add_count = 15 - movies_length
-    # 비슷한 컨텐츠가 15개 이상인 경우
+    # 15개 이상인 경우
     if add_count <= 0:
         movies = Movie.objects.order_by('-vote_cnt').distinct()[:15]
+    # 15개 미만인 경우
     else:
-        # print(movie.title)
         movie_genre = movie.movie_genre.all()
-        print(movie_genre)
         movies_same_genre = Movie.objects.filter(movie_genre__id__in=movie_genre).order_by('-vote_cnt').distinct()[:add_count]
         movies += movies_same_genre
     similar_movies_serializer = MovieDetailSerializer(data = movies, many=True)
-
     print(serializer.is_valid(), similar_movies_serializer.is_valid())
+    print(serializer)
     print(serializer.data)
-    print(similar_movies_serializer.data)
+    print(type(serializer.data))
     context = {
         "movie" : serializer.data, 
         "similar_movies" : similar_movies_serializer.data,
