@@ -1,3 +1,4 @@
+from django.db.models import manager
 from rest_framework import serializers
 from .models import Movie, Tournament, Genre, Review
 
@@ -22,17 +23,19 @@ class TournamentSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class MovieDetailSerializer(serializers.ModelSerializer): # 영화상세
-    genres = GenreSerializer(many=True, read_only=True)
-
-    class Meta : 
-        model = Movie
-        fields = "__all__"
-
-
 class ReviewSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Review
         fields = ('id','content', 'rating', 'user',)
         read_only_fields = ('user',)
+
+
+class MovieDetailSerializer(serializers.ModelSerializer): # 영화상세
+    genres = GenreSerializer(many=True, read_only=True)
+    review_set = ReviewSerializer(many=True, read_only=True)
+
+    class Meta : 
+        model = Movie
+        fields = "__all__"
+

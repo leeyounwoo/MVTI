@@ -39,6 +39,7 @@ export default {
       win_movies : [],
       slides: 0,
       slides_2d: 0,
+      
     }
   },
   methods : {

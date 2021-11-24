@@ -2,7 +2,7 @@
   <div id="app">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark" id="nav1">
       <div class="container-fluid">
-        <router-link :to="{name: 'Movies'}" class="navbar-brand">MVTI</router-link>
+        <router-link :to="{name: 'Movies'}" class="navbar-brand navbar_homelogo">MVTI</router-link>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -107,6 +107,11 @@ export default {
 
 .navbar-nav .nav-item{
   text-align:center;
+}
+
+.navbar_homelogo {
+  font-size: 50px;
+
 }
 </style>
 
