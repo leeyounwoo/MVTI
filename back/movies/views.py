@@ -5,7 +5,7 @@ from .models import Movie, Genre, Ott, Tournament, Review
 import csv
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from rest_framework import status
+from rest_framework import serializers, status
 from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from .serializers import MovieSerializer, TournamentSerializer, MovieDetailSerializer, ReviewSerializer
@@ -52,46 +52,45 @@ def index(request) :
     }
     return JsonResponse(context)
 
-# def detail(request, movie_pk):
-#     movie = Movie.objects.get(pk=movie_pk)
-#     url = f'https://api.themoviedb.org/3/movie/{movie.idx}/similar?api_key=1b7edbdee7b82ec37e80ba4d2b36db68&language=ko-KR&page=1'
-#     res = requests.get(url)
-#     similars = res.json().get('results')
-#     movies = []
-#     for similar in similars:
-#         movie = Movie.objects.filter(title = similar['title'], released_date = similar['release_date']).first()
-#         if movie != None:
-#             movies.append(movie)
-#             print(movie.title)
-#     context={
-#         'similar_movies' : movies
-#     }
-#     return render(request, 'movies/detail.html', context)
-
 
 
 @api_view(['GET'])
 def movie_detail(request, movie_pk) :
     movie = Movie.objects.get(pk=movie_pk)
     movie_list = [movie]
-    # serializer = MovieDetailSerializer(data = movie)
     serializer = MovieDetailSerializer(data = movie_list, many=True)
-
-    # 한영화의 genres에 포함된 genre를 포함하는 genres를 가지고 있는 영화들을 찾고 싶다. - 해결
     
-    # genres = movie.genres.all().values_list('id', flat=True) # 영화의 모든 genre를 id 객체로 가져오기
-    # movies_same_genre = Movie.objects.filter(genres__id__in=genres).order_by('-vote_count').distinct()[:20]
+    url = f'https://api.themoviedb.org/3/movie/{movie.idx}/similar?api_key=1b7edbdee7b82ec37e80ba4d2b36db68&language=ko-KR&page=1'
+    res = requests.get(url)
+    similars = res.json().get('results')
+    # print(similars)
+    movies = []
+    for similar in similars:
+        movie1 = Movie.objects.filter(title = similar['title'], released_date = similar['release_date']).first()
+        if movie1 != None:
+            movies.append(movie1)
+            print(movie1.title)
+    movies_length = len(movies)
+    add_count = 15 - movies_length
+    # 비슷한 컨텐츠가 15개 이상인 경우
+    if add_count <= 0:
+        movies = Movie.objects.order_by('-vote_cnt').distinct()[:15]
+    else:
+        # print(movie.title)
+        movie_genre = movie.movie_genre.all()
+        print(movie_genre)
+        movies_same_genre = Movie.objects.filter(movie_genre__id__in=movie_genre).order_by('-vote_cnt').distinct()[:add_count]
+        movies += movies_same_genre
+    similar_movies_serializer = MovieDetailSerializer(data = movies, many=True)
 
-    # recommended_movies = Movie.objects.filter(genres = movie.genres.all())[:10]
-    # same_genre_serializer = MovieDetailSerializer(data = movies_same_genre, many=True)
-    print(serializer.is_valid())
-    # print(same_genre_serializer.is_valid())
+    print(serializer.is_valid(), similar_movies_serializer.is_valid())
+    print(serializer.data)
+    print(similar_movies_serializer.data)
     context = {
         "movie" : serializer.data, 
-        # "same_genres" : same_genre_serializer.data,
+        "similar_movies" : similar_movies_serializer.data,
     }
 
-    # movieSerializer = MovieSerializer(data = recommended_movies, many=True)
     return Response(context)
 
 
@@ -249,7 +248,8 @@ def review_create(request, movie_pk):
 @authentication_classes([JSONWebTokenAuthentication])
 @permission_classes([IsAuthenticated])
 def review_delete(request, movie_pk, review_pk):
-    if not request.user.movie_reviews.filter(pk=review_pk).exists():
+    print('시작')
+    if not request.user.movie_comments.filter(pk=review_pk).exists():
         return Response({'detail': '권한이 없습니다.'}, status=status.HTTP_403_FORBIDDEN)
     
     

@@ -82,23 +82,25 @@
 
         </div>
       </div>
-      <div class="">
-        <h2 class="else-movieslide">비슷한 컨텐츠</h2><hr>
-        <carousel-3d :disable3d="true" :space="230" :clickable="false" :controls-visible="true" :width="200" :height="270" :autoplay="true" :autoplay-timeout="3000">
-          <slide v-for="(slide_2d, i) in slides_2d" :key="i" :index="i">
-            <img 
-              :src="`https://image.tmdb.org/t/p/original${similar_movies[i].poster_path}`" 
-              alt="poster" 
-              style="width:100%; height:100%; cursor: pointer;" 
-              class="imggroup"
-            >
-            <star-rating v-bind:star-size="30" style="position: absolute; top: 0px; text-align: center; size: 50%;}" :rating="parseFloat(similar_movies[i].vote_average) / 2" :read-only="true" :increment="0.01"/>
-              <button 
-                class="imggroup-button2"
-                @click="goToMovieDetail(similar_movies[i])"
-              >Detail</button>
-          </slide>
-        </carousel-3d>
+      <div class="main">
+        <div>
+          <h2 class="else-movieslide">비슷한 컨텐츠</h2><hr>
+          <carousel-3d :disable3d="true" :space="230" :clickable="false" :controls-visible="true" :width="200" :height="270" :autoplay="true" :autoplay-timeout="3000">
+            <slide v-for="(slide_2d, i) in slides_2d" :key="i" :index="i">
+              <img 
+                :src="`https://image.tmdb.org/t/p/original${similar_movies[i].poster_path}`" 
+                alt="poster" 
+                style="width:100%; height:100%; cursor: pointer;" 
+                class="imggroup"
+              >
+              <star-rating v-bind:star-size="30" style="position: absolute; top: 0px; text-align: center; size: 50%;}" :rating="parseFloat(similar_movies[i].vote_average) / 2" :read-only="true" :increment="0.01"/>
+                <button 
+                  class="imggroup-button2"
+                  @click="goToMovieDetail(similar_movies[i])"
+                >Detail</button>
+            </slide>
+          </carousel-3d>
+        </div>
       </div>
 
 
@@ -117,6 +119,7 @@ import { mapState } from 'vuex'
 
 Vue.use('Carousel3d')
 
+
 const BACKEND = process.env.VUE_APP_BACKEND_LINK
 
 
@@ -133,6 +136,8 @@ export default {
       score: 0,
       movie : '',
       similar_movies : [],
+      // slides: 5,
+      slides_2d: 15,
     }
   },
   methods : {
@@ -150,7 +155,9 @@ export default {
         .then((res) => {
           console.log(res)
           this.movie = res.data['movie'][0]
-          // this.similar_movies = res.data.similar_movies
+          this.similar_movies = res.data.similar_movies
+          console.log(res.data.similar_movies)
+
         })
         .catch(() => {
           alert("없는 영화 정보입니다.")
@@ -167,8 +174,6 @@ export default {
         content: this.reviewInput,
         rating: this.score,
       }
-      console.log(reviewInfo)
-      console.log(`${BACKEND}movies/${movieId}/review/create/`)
       axios({
         method: 'post',
         url: `${BACKEND}movies/${movieId}/review/create/`,
@@ -176,9 +181,7 @@ export default {
         headers: this.setToken(this.token),
       })
         .then(()=>{
-          console.log('댓글작성성공')
           this.getMovie(movieId)
-          // console.log(this.movie.review_set)
           this.reviewInput = ''
           this.score = 0
         })
@@ -189,6 +192,19 @@ export default {
     giveStarRating (num) {
       this.score = num
     },
+    deleteMovieReviewomment(reviewId, movieId){
+      axios({
+        method: 'delete',
+        url: `http://127.0.0.1:8000/movies/${movieId}/review/delete/${reviewId}`,
+        headers: this.setToken(this.token)
+      })
+        .then(() => {
+          this.getMovie(movieId)
+        })
+        .catch(() => {
+          alert('작성한 댓글이 아닙니다')
+        })
+    },
   
   },
   created : function(){
@@ -197,7 +213,8 @@ export default {
   computed : {
     ...mapState([
       'token'
-    ])
+    ]),
+
   },
 }
 </script>
@@ -206,6 +223,46 @@ export default {
 #container {
  background: #13151f;
 }
+.main {
+  background : #262626;
+}
 
+.section {
+  margin : 20px;
+}
+.section-header {
+  color : #ffffff;
+  margin-bottom: 30px;
+  padding-left: 20px;
+  text-transform: uppercase;
+  font-size: 2rem;
+  font-weight: 700;
+  border-left: 4px solid #c0392b;
+  display: flex;
+  align-items: center;
+}
+.else-movieslide {
+  color: #8A2BE2;
+}
+
+.imggroup {
+  position: relative;
+}
+.imggroup-button1 {
+  position: absolute; 
+  left:50%; 
+  bottom: 30%; 
+  margin-left:-20px;
+}
+
+
+
+.imggroup-button2 {
+  position: absolute;
+   left:50%; 
+   bottom: 30%; 
+   margin-left:-20px; 
+   width: 30%;
+}
 
 </style>
