@@ -16,7 +16,7 @@
         style="cursor: pointer;"
       ></b-table>
 
-      <button @click="writeContent" class="btn btn-warning">글쓰기</button>
+      <button @click="writeContent" class="btn btn-warning btn-writing">글쓰기</button>
       <br><br>
       <b-pagination
         v-model="currentPage"
@@ -135,5 +135,12 @@ export default {
   .padding {
     padding: 5% 15% ;
   } 
+  .btn-writing {
+    /* color: #8A2BE2; */
+    color: #000;
+    background-color: #8A2BE2;
+    border-color: #8A2BE2;
+
+  }
 
 </style>

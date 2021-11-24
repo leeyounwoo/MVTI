@@ -1,14 +1,14 @@
 from django.shortcuts import render, redirect
 import requests
 import json
-from .models import Movie, Genre, Ott, Tournament
+from .models import Movie, Genre, Ott, Tournament, Review
 import csv
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from .serializers import MovieSerializer, TournamentSerializer
+from .serializers import MovieSerializer, TournamentSerializer, MovieDetailSerializer, ReviewSerializer
 from django.http.response import JsonResponse
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from django.shortcuts import get_object_or_404
@@ -52,21 +52,49 @@ def index(request) :
     }
     return JsonResponse(context)
 
-def detail(request, movie_pk):
+# def detail(request, movie_pk):
+#     movie = Movie.objects.get(pk=movie_pk)
+#     url = f'https://api.themoviedb.org/3/movie/{movie.idx}/similar?api_key=1b7edbdee7b82ec37e80ba4d2b36db68&language=ko-KR&page=1'
+#     res = requests.get(url)
+#     similars = res.json().get('results')
+#     movies = []
+#     for similar in similars:
+#         movie = Movie.objects.filter(title = similar['title'], released_date = similar['release_date']).first()
+#         if movie != None:
+#             movies.append(movie)
+#             print(movie.title)
+#     context={
+#         'similar_movies' : movies
+#     }
+#     return render(request, 'movies/detail.html', context)
+
+
+
+@api_view(['GET'])
+def movie_detail(request, movie_pk) :
     movie = Movie.objects.get(pk=movie_pk)
-    url = f'https://api.themoviedb.org/3/movie/{movie.idx}/similar?api_key=1b7edbdee7b82ec37e80ba4d2b36db68&language=ko-KR&page=1'
-    res = requests.get(url)
-    similars = res.json().get('results')
-    movies = []
-    for similar in similars:
-        movie = Movie.objects.filter(title = similar['title'], released_date = similar['release_date']).first()
-        if movie != None:
-            movies.append(movie)
-            print(movie.title)
-    context={
-        'similar_movies' : movies
+    movie_list = [movie]
+    # serializer = MovieDetailSerializer(data = movie)
+    serializer = MovieDetailSerializer(data = movie_list, many=True)
+
+    # 한영화의 genres에 포함된 genre를 포함하는 genres를 가지고 있는 영화들을 찾고 싶다. - 해결
+    
+    # genres = movie.genres.all().values_list('id', flat=True) # 영화의 모든 genre를 id 객체로 가져오기
+    # movies_same_genre = Movie.objects.filter(genres__id__in=genres).order_by('-vote_count').distinct()[:20]
+
+    # recommended_movies = Movie.objects.filter(genres = movie.genres.all())[:10]
+    # same_genre_serializer = MovieDetailSerializer(data = movies_same_genre, many=True)
+    print(serializer.is_valid())
+    # print(same_genre_serializer.is_valid())
+    context = {
+        "movie" : serializer.data, 
+        # "same_genres" : same_genre_serializer.data,
     }
-    return render(request, 'movies/detail.html', context)
+
+    # movieSerializer = MovieSerializer(data = recommended_movies, many=True)
+    return Response(context)
+
+
 
 def add_genre(request):
     url = "https://api.themoviedb.org/3/genre/movie/list?api_key=1b7edbdee7b82ec37e80ba4d2b36db68"
@@ -203,4 +231,31 @@ def mypageMovie(request, username) :
         # 'likeMovies' : likeMoviesSerializer.data
     }
     return Response(context)
+
+@api_view(['POST'])
+@authentication_classes([JSONWebTokenAuthentication])
+@permission_classes([IsAuthenticated])
+def review_create(request, movie_pk):
+    print(request.data)
+    movie = get_object_or_404(Movie, pk=movie_pk)
+    serializer = ReviewSerializer(data=request.data)
+    if serializer.is_valid(raise_exception=True):
+        serializer.save(user=request.user, movie=movie)
+        print('123')
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+@api_view(['DELETE'])
+@authentication_classes([JSONWebTokenAuthentication])
+@permission_classes([IsAuthenticated])
+def review_delete(request, movie_pk, review_pk):
+    if not request.user.movie_reviews.filter(pk=review_pk).exists():
+        return Response({'detail': '권한이 없습니다.'}, status=status.HTTP_403_FORBIDDEN)
+    
+    
+    review = get_object_or_404(Review, pk=review_pk)
+    if request.method == 'DELETE':
+        review.delete()
+        return Response({'id':review_pk}, status=status.HTTP_204_NO_CONTENT)
+
 

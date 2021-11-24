@@ -143,6 +143,7 @@ def delete(request, recruit_pk):
 @permission_classes([IsAuthenticated])
 def comment_create(request, recruit_pk):
     recruit = get_object_or_404(Recruit, pk=recruit_pk)
+    print(request.data)
     serializer = CommentSerializer(data=request.data)
     if serializer.is_valid(raise_exception=True):
         serializer.save(author=request.user, recruit=recruit)

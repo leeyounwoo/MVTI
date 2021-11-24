@@ -4,7 +4,7 @@
     <div class="wright" :style="second_movie |imageURL |backgroundStyle" @click="selectMovie(second_movie)" ref="wright"></div>
     <div class="versus" ref="versus"></div>
     <div class="title">
-      영화 무작위 16강 대전(총 1368개)<br>
+      영화 추천을 위한 영화 이상형 월드컵 (16강)<br>
       
       <span v-if="max_count>2">
         16강&nbsp;&nbsp;&nbsp;
