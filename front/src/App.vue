@@ -35,9 +35,6 @@
               <li class="nav-item" >
                 <router-link :to="{name: 'Login'}" class="nav-link active">Login</router-link>
               </li>
-              <!-- <li class="nav-item">
-                <router-link :to="{name: 'Login'}" class="nav-link active" :isToggle="isTrue">Signup</router-link>
-              </li> -->
             </span>
           </ul>
         </div>
@@ -62,12 +59,10 @@ export default {
       isTrue: true,
     }
   },
-
   methods:{
     logout : function (){
       this.$store.dispatch('logout')
       this.$router.push({name : 'Login' })
-      
     },
   },
   computed:{
@@ -78,16 +73,11 @@ export default {
       return jwt_decode(this.token).username
     }
   },
-
 }
 </script>
 
 <style scoped>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  /* text-align: center; */
   color: #2c3e50;
 }
 
@@ -95,13 +85,10 @@ export default {
   padding: 30px;
 }
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
+
 
 #nav1 .router-link-exact-active {
-  color: #8A2BE2;
+  color: #B00084;
   font-weight: bold;
 }
 

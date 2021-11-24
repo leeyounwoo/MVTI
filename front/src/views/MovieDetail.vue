@@ -1,17 +1,40 @@
 <template>
   <div id="container">
     <div slot="body">
-      <div class="d-flex">
+      <div class="d-flex word-color">
         <div>
           <img 
             :src="`https://image.tmdb.org/t/p/original${movie.poster_path}`" 
             width="380px" alt="image">
         </div>
-        <div class="padding-7 text-left">
+        <div class="padding-7 text-left m-4">
           <h1 class="pt-3"><strong>{{movie.title}}</strong></h1>
-          <h4 class="pt-1 pb-4">
+          <h4 class="pt-1">
             <span>개봉일: {{movie.released_date}}</span>
-            평점: {{movie.vote_average}}
+          </h4>
+          <h4 class="pb-4">
+            <span> 평점: 
+              <span class="text-warning" >
+                <i v-if="movie.vote_average < 2" class="far fa-star"></i> 
+                <i v-else class="fas fa-star"></i>
+              </span>
+              <span class="text-warning">
+                <i v-if="movie.vote_average < 4" class="far fa-star"></i> 
+                <i v-else class="fas fa-star"></i>
+              </span>
+              <span class="text-warning">
+                <i v-if="movie.vote_average < 6" class="far fa-star"></i> 
+                <i v-else class="fas fa-star"></i>
+              </span>
+              <span class="text-warning">
+                <i v-if="movie.vote_average < 8" class="far fa-star"></i> 
+                <i v-else class="fas fa-star"></i>
+              </span>
+              <span class="text-warning">
+                <i v-if="movie.vote_average < 10" class="far fa-star"></i> 
+                <i v-else class="fas fa-star"></i>
+              </span>
+            </span>
           </h4>
           <p class="text-size">{{movie.overview}}</p>
 
@@ -220,18 +243,21 @@ export default {
 </script>
 
 <style scoped>
+.word-color {
+  color:#fff;
+}
 #container {
  background: #13151f;
 }
 .main {
-  background : #262626;
+  background : #13151f;
 }
 
 .section {
   margin : 20px;
 }
 .section-header {
-  color : #ffffff;
+  color : #fff;
   margin-bottom: 30px;
   padding-left: 20px;
   text-transform: uppercase;

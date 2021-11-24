@@ -1,13 +1,21 @@
 <template>
   <div class="main">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg">
       <div class="container-fluid">
         <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav">
-            <a @click="switchSlidMovie(netflix_movies)" class="nav-link button-slider-active button-slider" data-menu="1">Netflix</a>
-            <a @click="switchSlidMovie(disney_movies)" class="nav-link button-slider" data-menu="2">Disney +</a>
-            <a @click="switchSlidMovie(hulu_movies)" class="nav-link button-slider" data-menu="3">hulu</a>
-            <a @click="switchSlidMovie(mvti_movies)" class="nav-link button-slider" data-menu="4">내 MVTI 추천영화</a>
+          <ul class="navbar-nav" id="ott-button">
+            <h2>
+              <a @click="switchSlidMovie(netflix_movies)" class="nav-link button-slider-active ott-button" data-menu="1">Netflix</a>
+            </h2>
+            <h2>
+              <a @click="switchSlidMovie(disney_movies)" class="nav-link button-slider ott-button" data-menu="2">Disney +</a>
+            </h2>
+            <h2>
+              <a @click="switchSlidMovie(hulu_movies)" class="nav-link button-slider ott-button" data-menu="3">hulu</a>
+            </h2>
+            <h2>
+              <a @click="switchSlidMovie(mvti_movies)" class="nav-link button-slider ott-button" data-menu="4">내 MVTI 추천영화</a>
+            </h2>
           </ul>
         </div>
       </div>
@@ -131,7 +139,22 @@ export default {
         })
     },
     switchSlidMovie: function(select_movie) {
+      let menuLinks = document.querySelectorAll('.ott-button')
+      function clickMenuHandler() {
+
+        for (let i= 0; i< menuLinks.length; i++){
+          menuLinks[i].classList.remove('button-slider-active');
+          menuLinks[i].classList.add('button-slider')
+        }
+        this.classList.add('button-slider-active');
+        this.classList.remove('button-slider')
+
+      }
+      for (let i= 0; i< menuLinks.length; i++){
+        menuLinks[i].addEventListener('click', clickMenuHandler)
+      }
       this.selected_movies = select_movie
+      
     },
 
     goToMovieDetail: function(movie) {
@@ -149,26 +172,17 @@ export default {
 
 <style scoped>
 
-.main {
-  background : #262626;
-}
 
+#ott-button {
+  margin-left: 10%;
+}
 .section {
   margin : 20px;
 }
-.section-header {
-  color : #ffffff;
-  margin-bottom: 30px;
-  padding-left: 20px;
-  text-transform: uppercase;
-  font-size: 2rem;
-  font-weight: 700;
-  border-left: 4px solid #c0392b;
-  display: flex;
-  align-items: center;
-}
+
 .else-movieslide {
-  color: #8A2BE2;
+  margin-left: 10%;
+  color: #B00084;
 }
 
 .imggroup {
@@ -181,13 +195,18 @@ export default {
   margin-left:-20px;
 }
 
-
-
 .imggroup-button2 {
   position: absolute;
-   left:50%; 
-   bottom: 30%; 
-   margin-left:-20px; 
-   width: 30%;
+  left:50%; 
+  bottom: 30%; 
+  margin-left:-20px; 
+  width: 30%;
+}
+
+.button-slider-active {
+  color:#B00084;
+}
+.button-slider {
+  color:rgba(255,255,255,.55);
 }
 </style>
