@@ -6,7 +6,7 @@
         <h5>작성자 : {{ recruit.authorname }}님</h5>
         <br>
         <p>모집인원 : {{recruit.current_cnt}}/{{recruit.max_cnt}}</p>
-        <button>카카오페이결제</button>
+        <button class='btn btn-warning m-1' @click="pay(recruit.id)">카카오페이 결제</button>
         <br>
         <hr>
         <p >내용: {{ recruit.content }}</p>
@@ -89,7 +89,21 @@ export default {
           alert('작성하신 글이 아닙니다.')
         })
     },
-   
+    pay:function(recruit_pk){
+            let baseUrl = "http://127.0.0.1:8000/"
+            // let form = new FormData()
+            this.$route.params.recruit_pk
+            axios.post(baseUrl+`recruits/${recruit_pk}/pay/`)
+            .then(res =>{
+                let payUrl = res.data.next_redirect_pc_url
+                console.log(res)
+                location.href = payUrl
+            })
+            .catch(() =>{
+                alert("에러가 발생했습니다. 다시 시도해주세요")
+                this.$router.push('/')
+            })
+        },
   },
   created () {
     console.log('temp')

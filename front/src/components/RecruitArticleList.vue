@@ -57,7 +57,11 @@ export default {
         },
         {
           key: 'current_cnt',
-          label:'남은 모집 인원'
+          label:'현재 모집 인원'
+        },
+        {
+          key: 'max_cnt',
+          label:'최대 모집 인원'
         },
         {
           key: 'title',

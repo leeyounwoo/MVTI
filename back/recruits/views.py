@@ -10,7 +10,7 @@ from rest_framework.decorators import api_view
 from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
-
+from django.http.response import JsonResponse
 
 from .models import Recruit, Comment
 from .serializers import CommentSerializer, RecruitSerializer
@@ -244,37 +244,6 @@ def comment_delete(request, recruit_pk, comment_pk):
 
 #     return render(request, 'recruits/pay.html')
 
-# @login_required
-# def approval(request, recruit_pk):
-#     user = get_object_or_404(User, pk=request.user.pk)
-#     URL = 'https://kapi.kakao.com/v1/payment/approve'
-#     headers = {
-#         "Authorization": "KakaoAK " + "b76c688bcc686d6c8ef41ad79fca3b5e",
-#         "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
-#     }
-#     params = {
-#         "cid": "TC0ONETIME",    # 테스트용 코드
-#         "tid": request.session['tid'],  # 결제 요청시 세션에 저장한 tid
-#         "partner_order_id": "1001",     # 주문번호
-#         "partner_user_id": f"{user}",    # 유저 아이디
-#         "pg_token": request.GET.get("pg_token"),     # 쿼리 스트링으로 받은 pg토큰
-#     }
-
-#     res = requests.post(URL, headers=headers, params=params)
-#     print(res.text)
-#     amount = res.json()['amount']['total']
-#     res = res.json()
-#     context = {
-#         'res': res,
-#         'amount': amount,
-#     }
-#     recruit = get_object_or_404(Recruit, pk=recruit_pk)
-#     recruit.author.money += amount
-#     recruit.author.save()
-#     print(recruit.author.username, recruit.author.money)
-#     recruit.current_cnt += 1
-#     recruit.save()
-#     return render(request, 'recruits/approval.html', context)
 
 
 # def fail(request, recruit_pk):
@@ -286,33 +255,49 @@ def comment_delete(request, recruit_pk, comment_pk):
 
 
 
+@api_view(['POST'])
+def pay(request, recruit_pk):
+    print(recruit_pk)
+    url = "https://kapi.kakao.com"
+    headers = {
+        'Authorization': "KakaoAK " + "b76c688bcc686d6c8ef41ad79fca3b5e",
+        'Content-type': 'application/x-www-form-urlencoded;charset=utf-8',
+    }
+    params = {
+        'cid': "TC0ONETIME",
+        'partner_order_id': '1001',
+        'partner_user_id': 'jihwan',
+        'item_name': '구독비',
+        'quantity': 1,
+        'total_amount': 3000,
+        'vat_amount': 200,
+        'tax_free_amount': 0,
+        'approval_url': f'http://localhost:8081/{recruit_pk}/approval',
+        'fail_url': 'http://localhost:8081/recruits/',
+        'cancel_url': 'http://localhost:8081/recruits/',
+    }
+    response = requests.post(url+"/v1/payment/ready", params=params, headers=headers)
+    response = json.loads(response.text)
+    return Response(response)    
 
 
-
-
-
-
-
-# @api_view(['POST'])
-# def pay(request):
-#     url = "https://kapi.kakao.com"
-#     headers = {
-#         'Authorization': "KakaoAK " + "b76c688bcc686d6c8ef41ad79fca3b5e",
-#         'Content-type': 'application/x-www-form-urlencoded;charset=utf-8',
-#     }
-#     params = {
-#         'cid': "TC0ONETIME",
-#         'partner_order_id': '1001',
-#         'partner_user_id': 'jihwan',
-#         'item_name': '구독비',
-#         'quantity': 1,
-#         'total_amount': 0,
-#         'vat_amount': 200,
-#         'tax_free_amount': 0,
-#         'approval_url': 'http://127.0.0.1:8000/community/',
-#         'fail_url': 'http://127.0.0.1:8000/admin/',
-#         'cancel_url': 'http://127.0.0.1:8000/community/1/',
-#     }
-#     response = requests.post(url+"/v1/payment/ready", params=params, headers=headers)
-#     response = json.loads(response.text)
-#     return Response(response)    
+@api_view(['POST'])
+@authentication_classes([JSONWebTokenAuthentication])
+@permission_classes([IsAuthenticated])
+def approval(request, recruit_pk):
+    recruit = get_object_or_404(Recruit, pk=recruit_pk)
+    recruit.author.money += 3000
+    recruit.author.save()
+    print(recruit.author.username, recruit.author.money)
+    recruit.current_cnt += 1
+    recruit.save()
+    
+    recruit_serializer = RecruitSerializer(data=recruit)
+    recruit_serializer.is_valid()
+    context = {
+        'id' : recruit.public_id,
+        'pw' : recruit.public_pw,
+        'money' : '3000',
+        'ott' : recruit.ott_name,
+    }
+    return JsonResponse(context)
