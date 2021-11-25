@@ -12,7 +12,7 @@
         <p >내용: {{ recruit.content }}</p>
         <br>
         <hr>
-        <button v-if="recruit.author == user" @click="deleteRecruitDetail" class="btn btn-dark m-1">삭제</button>
+        <button @click="deleteRecruitDetail" class="btn btn-dark m-1">삭제</button>
         <br><br><hr>
         <RecruitDetailComment 
           :commentCount="recruit.comment_count"

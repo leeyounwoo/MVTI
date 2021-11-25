@@ -348,7 +348,7 @@ def movie_detail(request, movie_pk) :
 
 - 제목, OTT 서비스명, 총 공유 인원, 현재 공유 인원, 공유할 계정 아이디, 공유할 계정 비밀번호, 내용을 입력받아 게시글 작성
 
-  ![image-20211125101604641](README.assets/image-20211125101604641.png)
+  ![image-20211125122623709](C:\Users\LeeYounWoo\AppData\Roaming\Typora\typora-user-images\image-20211125122623709.png)
 
 ##### (2) 작성된 게시글 모아서 보기
 
@@ -360,6 +360,33 @@ def movie_detail(request, movie_pk) :
 
 ##### (3) 게시글 상세 페이지
 
-- 게시글을 작성한 사용자는 게시글을 삭제할 수 있음
-- 
+![image-20211125115122827](C:\Users\LeeYounWoo\AppData\Roaming\Typora\typora-user-images\image-20211125115122827.png)
+
+- 삭제 기능: 게시글을 작성한 사용자는 자신의 게시글을 삭제할 수 있음 (다른 사용자는 삭제 불가)
+
+- 댓글 기능: 모든 로그인한 사용자는 게시글에 댓글을 입력할 수 있음
+
+- 카카오페이 결재 기능: 
+
+  - 게시글을 작성한 사용자는 자신의 게시글에서 결재를 이용할 수 없음 (다른 사용자는 결재 가능)
+
+  - "카카오페이 결제" 버튼 클릭시 pay함수 작동
+
+    - headers에 token 정보 담아서 전달 (서버쪽에서 사용자가 게시판을 적지 않았으면 403에러)
+
+    - 카카오페이 API를 이용해서 결제
+
+      - 카카오페이 결제창으로 이동
+
+        ![image-20211125115335271](C:\Users\LeeYounWoo\AppData\Roaming\Typora\typora-user-images\image-20211125115335271.png)
+
+        ![	](C:\Users\LeeYounWoo\AppData\Roaming\Typora\typora-user-images\image-20211125115458254.png)
+
+      - 결제 승인 페이지로 이동
+
+        ![image-20211125122346706](C:\Users\LeeYounWoo\AppData\Roaming\Typora\typora-user-images\image-20211125122346706.png)
+
+        - 현재 모집 인원 1 증가
+
+        ![image-20211125122822786](C:\Users\LeeYounWoo\AppData\Roaming\Typora\typora-user-images\image-20211125122822786.png)	
 

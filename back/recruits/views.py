@@ -102,6 +102,7 @@ def comment_create(request, recruit_pk):
     serializer = CommentSerializer(data=request.data)
     if serializer.is_valid(raise_exception=True):
         serializer.save(author=request.user, recruit=recruit)
+        print('12314')
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 @api_view(['DELETE'])
