@@ -3,13 +3,19 @@
     <!-- <userInformation/> -->
       
     <div>
-      <h2 style="margin-left:400px; color: #B00084;">이상형 월드컵 우승작</h2><hr>
+      <h2 style="text-align: center; color: #B00084;">이상형 월드컵 우승작</h2><hr>
       <carousel-3d :disable3d="true" :space="230" :display="5" :clickable="false" :controls-visible="true" :width="200" :height="270" :autoplay="true" :autoplay-timeout="3000">
         <slide v-for="(slide_2d, i) in slides_2d" :key="i" :index="i">
           <img 
             :src="`https://image.tmdb.org/t/p/original${win_movies[i].poster_path}`" alt="poster" style="width:100%; height:100%; cursor: pointer;" class="">
         </slide>
       </carousel-3d>
+      <h3>{{ first_name }}</h3>
+      <img :src="`${first_img}`" alt="poster" style="width:30%; height:30%;" class="">
+      <h3>{{ second_name }}</h3>
+      <img :src="`${second_img}`" alt="poster" style="width:30%; height:30%;" class="">
+      <h3>{{ third_name }}</h3>
+      <img :src="`${third_img}`" alt="poster" style="width:30%; height:30%;" class="">
     </div>
     
   </div>
@@ -39,7 +45,12 @@ export default {
       win_movies : [],
       slides_2d: 0,
       count: 0,
-      
+      first_name : '',
+      first_img : '',
+      second_name : '',
+      second_img : '',
+      third_name : '',
+      third_img : '',
     }
   },
   methods : {
@@ -52,6 +63,12 @@ export default {
           console.log(res)
           this.win_movies = res.data.winMovies
           this.slides_2d = this.win_movies.length
+          this.first_name = res.data.first_name
+          this.first_img = res.data.first_img
+          this.second_name = res.data.second_name
+          this.second_img = res.data.second_img
+          this.third_name = res.data.third_name
+          this.third_img = res.data.third_img
           console.log(this.win_movies)
         })
         .catch(() =>{
