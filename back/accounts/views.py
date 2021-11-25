@@ -18,7 +18,6 @@ def signup(request):
 	#1-1. Client에서 온 데이터를 받아서
     password = request.data.get('password')
     password_confirmation = request.data.get('passwordConfirmation')
-    email = request.data.get('email')
 
 	#1-2. 패스워드 일치 여부 체크
     if password != password_confirmation:
@@ -44,11 +43,12 @@ def signup(request):
 # @permission_classes([IsAuthenticated])
 def profile(request, username):    
     person = get_object_or_404(get_user_model(), username=username)
-
+    print('휴대폰', person.phone)
     context ={
         'username': person.username,
         'email': person.email,
-        'money': person.money
+        'money': person.money,
+        'phone': person.phone,
     }
     return JsonResponse(context)
  

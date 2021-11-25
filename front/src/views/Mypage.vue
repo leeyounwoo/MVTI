@@ -10,13 +10,22 @@
             :src="`https://image.tmdb.org/t/p/original${win_movies[i].poster_path}`" alt="poster" style="width:100%; height:100%; cursor: pointer;" class="">
         </slide>
       </carousel-3d>
-      <h3>{{ first_name }}</h3>
-      <img :src="`${first_img}`" alt="poster" style="width:30%; height:30%;" class="">
-      <h3>{{ second_name }}</h3>
-      <img :src="`${second_img}`" alt="poster" style="width:30%; height:30%;" class="">
-      <h3>{{ third_name }}</h3>
-      <img :src="`${third_img}`" alt="poster" style="width:30%; height:30%;" class="">
+      <div class="d-flex" style="width: 200; height=270;">
+        <div>
+          <h3>{{ first_name }}</h3>
+          <img :src="`${first_img}`" alt="poster" style="width:100%; height:100%; cursor: pointer;">
+        </div>
+        <div>
+          <h3>{{ second_name }}</h3>
+          <img :src="`${second_img}`" alt="poster" style="width:100%; height:100%; cursor: pointer;">
+        </div>
+        <div>
+          <h3>{{ third_name }}</h3>
+          <img :src="`${third_img}`" alt="poster" style="width:100%; height:100%; cursor: pointer;">
+        </div>
+      </div>
     </div>
+    
     <h2 style="color: #fff;">구매한 OTT 서비스 계정</h2>
     <div class="d-flex">
 
@@ -31,6 +40,7 @@
       </ul>
     </div>
     <div style="color: #fff;">마일리지: {{userInformation.money}}원</div>
+    <p>{{userInformation.phone}}</p>
   </div>
 </template>
 <script>

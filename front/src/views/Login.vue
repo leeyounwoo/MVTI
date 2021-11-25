@@ -22,7 +22,7 @@
             <h2>Create an account</h2>
             <input type="text" placeholder="Username" id="createUsername" v-model="credentials.username">
             <input type="text" placeholder="Email Address" id="createEmail" v-model="credentials.email">
-            <input type="text" placeholder="Phone Number" id="createPhone" v-model="credentials.email">
+            <input type="text" placeholder="Phone Number" id="createPhone" v-model="credentials.phone">
             <input type="password" placeholder="create Password" id="createPassword" v-model="credentials.password">
             <input type="password" placeholder="Confirm Password" id="createPasswordConfirmation" v-model="credentials.passwordConfirmation">
             <input type="submit" placeholder="Sign Up" @click="signup(credentials)" @keyup.enter="signup(credentials)">
@@ -56,6 +56,7 @@ export default {
         email:null,
         password: null,
         passwordConfirmation: null,
+        phone: null,
         
       },
     }
