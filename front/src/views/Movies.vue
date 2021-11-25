@@ -8,13 +8,16 @@
               <a @click="switchSlidMovie(netflix_movies)" class="nav-link button-slider-active ott-button" data-menu="1">Netflix</a>
             </h2>
             <h2>
-              <a @click="switchSlidMovie(disney_movies)" class="nav-link button-slider ott-button" data-menu="2">Disney +</a>
+              <a @click="switchSlidMovie(disney_movies)" class="nav-link button-slider ott-button" data-menu="2">Disney+</a>
             </h2>
             <h2>
-              <a @click="switchSlidMovie(hulu_movies)" class="nav-link button-slider ott-button" data-menu="3">hulu</a>
+              <a @click="switchSlidMovie(amazon_movies)" class="nav-link button-slider ott-button" data-menu="2">Amazon</a>
             </h2>
             <h2>
-              <a @click="switchSlidMovie('mvti_movies')" class="nav-link button-slider ott-button" data-menu="4">내 MVTI 추천영화</a>
+              <a @click="switchSlidMovie(hulu_movies)" class="nav-link button-slider ott-button" data-menu="3">Hulu</a>
+            </h2>
+            <h2>
+              <a @click="switchSlidMovie('mvti_movies')" class="nav-link button-slider ott-button" data-menu="4">MVTI추천</a>
             </h2>
           </ul>
         </div>
@@ -66,6 +69,42 @@
       </carousel-3d>
     </div>
     <hr>
+    <div>
+      <h2 class="else-movieslide">평가가 좋은 영화</h2><hr>
+      <carousel-3d :autoplay="true" :autoplay-timeout="3000" :display="7" :disable3d="true" :space="230" :clickable="false" :controls-visible="true" :width="200" :height="270" >
+        <slide v-for="(slide_2d, i) in slides_2d" :key="i" :index="i">
+          <img 
+            :src="`https://image.tmdb.org/t/p/original${top_movies[i].poster_path}`" 
+            style="width:100%; height:100%; cursor: pointer;" 
+            class="imggroup"
+          >
+          <star-rating v-bind:star-size="30" style="position: absolute; top: 0px; text-align: center; size: 50%;}" :rating="parseFloat(top_movies[i].vote_average) / 2" :read-only="true" :increment="0.01"/>
+            <button 
+              class="imggroup-button2"
+              @click="goToMovieDetail(top_movies[i])"
+            >Detail</button>
+        </slide>
+      </carousel-3d>
+    </div>
+    <hr>
+    <div>
+      <h2 class="else-movieslide">최신 영화</h2><hr>
+      <carousel-3d :autoplay="true" :autoplay-timeout="3000" :display="7" :disable3d="true" :space="230" :clickable="false" :controls-visible="true" :width="200" :height="270" >
+        <slide v-for="(slide_2d, i) in slides_2d" :key="i" :index="i">
+          <img 
+            :src="`https://image.tmdb.org/t/p/original${new_movies[i].poster_path}`" 
+            style="width:100%; height:100%; cursor: pointer;" 
+            class="imggroup"
+          >
+          <star-rating v-bind:star-size="30" style="position: absolute; top: 0px; text-align: center; size: 50%;}" :rating="parseFloat(new_movies[i].vote_average) / 2" :read-only="true" :increment="0.01"/>
+            <button 
+              class="imggroup-button2"
+              @click="goToMovieDetail(new_movies[i])"
+            >Detail</button>
+        </slide>
+      </carousel-3d>
+    </div>
+    <hr>
     <br><br><br><br>
 
     <!-- <div class="section">
@@ -106,13 +145,12 @@ export default {
       selected_movies: [],
       netflix_movies : [],
       disney_movies: [],
+      amazon_movies: [],
       hulu_movies: [],
       mvti_movies: [],
       popular_movies: [],
-      // first_genre: '',
-      // first_genre_movies: [],
-      // secound_genre: '',
-      // secound_genre_movies: [],
+      top_movies: [],
+      new_movies: [],
       slides: 15,
       slides_2d: 15,
     }
@@ -128,15 +166,23 @@ export default {
     },
     getMovies : function() {
       const link = 'movies'
-      axios.get(BACKEND+link)
+      axios({
+          method: 'get',
+          url: BACKEND+link,
+          headers: this.setToken(this.token),
+      })
         .then(res =>{
           console.log(res.data.popular_movies[4].poster_path)
           console.log(res.data.netflix_movies)
           this.selected_movies = res.data.netflix_movies
           this.netflix_movies = res.data.netflix_movies
           this.disney_movies = res.data.disney_movies
+          this.amazon_movies = res.data.amazon_movies
           this.hulu_movies = res.data.hulu_movies
+          this.mvti_movies = res.data.mvti_movies
           this.popular_movies = res.data.popular_movies
+          this.top_movies = res.data.top_movies
+          this.new_movies = res.data.new_movies
           // this.first_genre = res.data.first_genre
           // this.first_genre_movies = res.data.first_genre_movies
           // this.secound_genre = res.data.secound_genre
@@ -146,6 +192,26 @@ export default {
           alert(error)
           console.log(BACKEND+link)
         })
+      // axios.get(BACKEND+link, this.setToken(this.token))
+      //   .then(res =>{
+      //     console.log(res.data.popular_movies[4].poster_path)
+      //     console.log(res.data.netflix_movies)
+
+      //     this.selected_movies = res.data.netflix_movies
+      //     this.netflix_movies = res.data.netflix_movies
+      //     this.disney_movies = res.data.disney_movies
+      //     this.hulu_movies = res.data.hulu_movies
+      //     this.mvti_movies = res.data.mvti_movies
+      //     this.popular_movies = res.data.popular_movies
+      //     // this.first_genre = res.data.first_genre
+      //     // this.first_genre_movies = res.data.first_genre_movies
+      //     // this.secound_genre = res.data.secound_genre
+      //     // this.secound_genre_movies = res.data.secound_genre_movies
+      //   })
+      //   .catch(error=> {
+      //     alert(error)
+      //     console.log(BACKEND+link)
+      //   })
     },
     getMvtiMovies: function() {
       console.log(this.$route.params.username)
@@ -155,7 +221,7 @@ export default {
         headers: this.setToken(this.token)
       })
         .then(res => {
-          this.mvti_movies = res.data
+          this.mvti_movies = res.data.mvti_movies
         })
         .catch(() => {
           alert('로그인을 하지 않았습니다.')
@@ -178,8 +244,12 @@ export default {
       }
       if (select_movie === 'mvti_movies'){
         this.getMvtiMovies()
+        console.log(this.mvti_movies)
+        this.selected_movies = this.mvti_movies
       }
-      this.selected_movies = select_movie
+      else{
+        this.selected_movies = select_movie
+      }
       
     },
 

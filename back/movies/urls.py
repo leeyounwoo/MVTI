@@ -12,5 +12,5 @@ urlpatterns = [
     path('mypageMovie/<str:username>', views.mypageMovie),
     path('<int:movie_pk>/review/create/', views.review_create),
     path('<int:movie_pk>/review/delete/<int:review_pk>/', views.review_delete),
-
+    path('mvti/', views.mvti, name='mvti'),
 ]
