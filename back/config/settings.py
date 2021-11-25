@@ -33,7 +33,6 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     # Custom Apps
     'accounts',
-    'reviews',
     'recruits',
     'movies',
     
