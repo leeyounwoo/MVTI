@@ -9,7 +9,7 @@ from rest_framework.decorators import api_view
 from rest_framework import serializers, status
 from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from .serializers import MovieSerializer, TournamentSerializer, MovieDetailSerializer, ReviewSerializer
+from .serializers import MovieSerializer, OttSerializer, TournamentSerializer, MovieDetailSerializer, ReviewSerializer
 from django.http.response import JsonResponse
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from django.shortcuts import get_object_or_404
@@ -18,43 +18,7 @@ from django.contrib.auth import get_user_model
 # from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 @api_view(['GET'])
-@authentication_classes([JSONWebTokenAuthentication])
 def index(request) :
-    person = get_object_or_404(get_user_model(), username=request.user)
-    print(request.user)
-    temp_movies = Movie.objects.filter(tournament__user=person).distinct()
-    if len(temp_movies) == 0:
-        mvti_movies = Movie.objects.all().order_by('-vote_cnt')[:20]
-    elif len(temp_movies) == 1:
-        if len(temp_movies[0].movie_genre.all()) < 2:
-            mvti_movies = Movie.objects.filter(movie_genre = temp_movies[0].movie_genre.all()[0]).order_by('-popularity')[:20]
-        else:
-            mvti_movies = Movie.objects.filter(movie_genre = temp_movies[0].movie_genre.all()[0]).order_by('-popularity')[:10]
-            for i in range(1, len(temp_movies[0].movie_genre.all())):
-                gmovies = Movie.objects.filter(movie_genre = temp_movies[0].movie_genre.all()[i]).order_by('-popularity')[:10]
-                mvti_movies = (mvti_movies | gmovies).order_by('-popularity')[:20]
-    elif len(temp_movies) > 1:
-        temp = {}
-        for tmovie in temp_movies:
-            print(tmovie.movie_genre.all())
-            for genre in tmovie.movie_genre.all():
-                if genre in temp:
-                    temp[genre] += 1
-                else:
-                    temp[genre] = 1 
-        temp = sorted(temp.items(), key = lambda x: x[1], reverse=True)
-        print(temp)
-        mvti_movies = Movie.objects.filter(movie_genre = temp[0][0]).order_by('-popularity')[:10]
-        print(mvti_movies)
-        if len(temp) == 1:
-            mvti_movies = Movie.objects.filter(movie_genre = temp[0][0]).order_by('-popularity')[:20]
-        else:
-            for i in range(1, 3):
-                gmovies = Movie.objects.filter(movie_genre = temp[i][0]).order_by('-popularity')[:10]
-                print(gmovies)
-                mvti_movies = (mvti_movies | gmovies).order_by('-popularity')
-        print(mvti_movies)
-    
     netflix = Ott.objects.get(name = 'Netflix')
     netflix_movies = Movie.objects.filter(movie_ott = netflix).order_by('-popularity')[:20]
     disney = Ott.objects.get(name = 'Disney Plus')
@@ -64,7 +28,8 @@ def index(request) :
     hulu = Ott.objects.get(name = 'Hulu')
     hulu_movies = Movie.objects.filter(movie_ott = hulu).order_by('-popularity')[:20]
     popular_movies = Movie.objects.order_by('-vote_cnt')[:20]
-  
+    top_movies = Movie.objects.order_by('-vote_average')[:20]
+    new_movies = Movie.objects.order_by('-released_date')[:20]
     
     # latest_movies = Movie.objects.order_by('-released_date')[:20]
     # highscore_movies = Movie.objects.order_by('-vote_average')[:20]
@@ -75,23 +40,18 @@ def index(request) :
     amazon_serializer = MovieSerializer(data=amazon_movies, many=True)
     hulu_serializer = MovieSerializer(data=hulu_movies, many=True)
     popular_serializer = MovieSerializer(data=popular_movies, many=True)
-    mvti_serializer = MovieSerializer(data=mvti_movies, many=True)
-    # latest_serializer = MovieSerializer(data=latest_movies, many=True)
-    # highscore_serializer = MovieSerializer(data=highscore_movies, many=True)
-    # like_serializer = MovieSerializer(data=like_movies, many=True)
+    top_serializer = MovieSerializer(data=top_movies, many=True)
+    new_serializer = MovieSerializer(data=new_movies, many=True)
     print(netflix_serializer.is_valid(), disney_serializer.is_valid(), amazon_serializer.is_valid(), hulu_serializer.is_valid(), \
-        popular_serializer.is_valid(), mvti_serializer.is_valid(), ) 
-    # print(latest_serializer.is_valid() , highscore_serializer.is_valid() , like_serializer.is_valid())
-    
+        popular_serializer.is_valid(), new_serializer.is_valid(), top_serializer.is_valid(),) 
     context={
         'netflix_movies' : netflix_serializer.data,
         'disney_movies' : disney_serializer.data,
         'amazon_movies' : amazon_serializer.data,
         'hulu_movies' : hulu_serializer.data,
         'popular_movies' : popular_serializer.data,
-        'mvti_movies' : mvti_serializer.data,
-        # 'latest_movies' : latest_serializer.data,
-        # 'highscore_movies' : highscore_serializer.data,
+        'new_movies' : new_serializer.data,
+        'top_movies' : top_serializer.data,
     }
     return JsonResponse(context)
 
@@ -259,34 +219,64 @@ def tournament(request) :
 @api_view(['GET'])
 def mypageMovie(request, username) :
     person = get_object_or_404(get_user_model(), username=username)
-    winMovies = Movie.objects.filter(tournament__user=person).distinct() # OneToMany 접근
-    # likeMovies = Review.objects.filter(user=person).filter(liked=True).order_by('-created_at')
-    # likeMovies = Movie.objects.filter(review__user=person).distinct()
+    winMovies = Movie.objects.filter(tournament__user=person).distinct() 
+    if len(winMovies) == 0:
+        first = Ott.objects.filter(pk=5)
+        second = Ott.objects.filter(pk=5)
+        third = Ott.objects.filter(pk=5)
+    elif len(winMovies) == 1:
+        if len(winMovies[0].movie_genre.all()) < 2:
+            mvti_movies = Movie.objects.filter(movie_genre = winMovies[0].movie_genre.all()[0]).order_by('-popularity')[:200]
+        else:
+            mvti_movies = Movie.objects.filter(movie_genre = winMovies[0].movie_genre.all()[0]).order_by('-popularity')[:100]
+            for i in range(1, len(winMovies[0].movie_genre.all())):
+                gmovies = Movie.objects.filter(movie_genre = winMovies[0].movie_genre.all()[i]).order_by('-popularity')[:100]
+                mvti_movies = (mvti_movies | gmovies).order_by('-popularity')[:200]
+    elif len(winMovies) > 1:
+        temp = {}
+        for tmovie in winMovies:
+            for genre in tmovie.movie_genre.all():
+                if genre in temp:
+                    temp[genre] += 1
+                else:
+                    temp[genre] = 1 
+        temp = sorted(temp.items(), key = lambda x: x[1], reverse=True)
+        mvti_movies = Movie.objects.filter(movie_genre = temp[0][0]).order_by('-popularity')[:100]
+        if len(temp) == 1:
+            mvti_movies = Movie.objects.filter(movie_genre = temp[0][0]).order_by('-popularity')[:200]
+        else:
+            for i in range(1, 3):
+                gmovies = Movie.objects.filter(movie_genre = temp[i][0]).order_by('-popularity')[:100]
+                mvti_movies = (mvti_movies | gmovies).order_by('-popularity')[:200]
     temp = {}
-    print(winMovies)
-    for winmovie in winMovies:
-        otts = winmovie.movie_ott.all()
+    for mvti_movie in mvti_movies:
+        otts = mvti_movie.movie_ott.all()
         for ott in otts:
             if ott in temp:
                 temp[ott] += 1
             else:
                 temp[ott] = 1
-    if len(temp) == 0:
-        most_ott = 'None',
-    else:
-        for tt in temp:
-            most_ott = tt.name
-            break
-    print(most_ott)
+    print(temp)
+    temp = sorted(temp.items(), key = lambda x: x[1], reverse=True)
+    first_name = temp[0][0].name
+    first_img = temp[0][0].image
+    second_name = temp[1][0].name
+    second_img = temp[1][0].image
+    third_name = temp[2][0].name
+    third_img = temp[2][0].image
 
     winMoviesSerializer = MovieSerializer(data = winMovies, many=True)
     # likeMoviesSerializer = MovieSerializer(data= likeMovies, many=True)
 
-    print(winMoviesSerializer.is_valid())
+    print(winMoviesSerializer.is_valid(),)
     context = {
         'winMovies' : winMoviesSerializer.data,
-        'ott' : most_ott, 
-        # 'likeMovies' : likeMoviesSerializer.data
+        'first_name' : first_name,
+        'first_img' : first_img,
+        'second_name' : second_name,
+        'second_img' : second_img,
+        'third_name' : third_name,
+        'third_img' : third_img,
     }
     return Response(context)
 
@@ -316,3 +306,52 @@ def review_delete(request, movie_pk, review_pk):
     if request.method == 'DELETE':
         review.delete()
         return Response({'id':review_pk}, status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(['GET'])
+@authentication_classes([JSONWebTokenAuthentication])
+def mvti(request) :
+    person = get_object_or_404(get_user_model(), username=request.user)
+    print(request.user)
+    temp_movies = Movie.objects.filter(tournament__user=person).distinct()
+    if len(temp_movies) == 0:
+        mvti_movies = Movie.objects.all().order_by('-vote_cnt')[:20]
+    elif len(temp_movies) == 1:
+        if len(temp_movies[0].movie_genre.all()) < 2:
+            mvti_movies = Movie.objects.filter(movie_genre = temp_movies[0].movie_genre.all()[0]).order_by('-popularity')[:20]
+        else:
+            mvti_movies = Movie.objects.filter(movie_genre = temp_movies[0].movie_genre.all()[0]).order_by('-popularity')[:10]
+            for i in range(1, len(temp_movies[0].movie_genre.all())):
+                gmovies = Movie.objects.filter(movie_genre = temp_movies[0].movie_genre.all()[i]).order_by('-popularity')[:10]
+                mvti_movies = (mvti_movies | gmovies).order_by('-popularity')[:20]
+    elif len(temp_movies) > 1:
+        temp = {}
+        for tmovie in temp_movies:
+            print(tmovie.movie_genre.all())
+            for genre in tmovie.movie_genre.all():
+                if genre in temp:
+                    temp[genre] += 1
+                else:
+                    temp[genre] = 1 
+        temp = sorted(temp.items(), key = lambda x: x[1], reverse=True)
+        print(temp)
+        mvti_movies = Movie.objects.filter(movie_genre = temp[0][0]).order_by('-popularity')[:10]
+        print(mvti_movies)
+        if len(temp) == 1:
+            mvti_movies = Movie.objects.filter(movie_genre = temp[0][0]).order_by('-popularity')[:20]
+        else:
+            for i in range(1, 3):
+                gmovies = Movie.objects.filter(movie_genre = temp[i][0]).order_by('-popularity')[:10]
+                print(gmovies)
+                mvti_movies = (mvti_movies | gmovies).order_by('-popularity')
+        print(mvti_movies)
+    
+    mvti_serializer = MovieSerializer(data=mvti_movies, many=True)
+   
+    print(mvti_serializer.is_valid(),) 
+ 
+    
+    context={
+        'mvti_movies' : mvti_serializer.data,
+    }
+    return JsonResponse(context)

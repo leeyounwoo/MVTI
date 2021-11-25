@@ -1,6 +1,6 @@
 from django.db.models import manager
 from rest_framework import serializers
-from .models import Movie, Tournament, Genre, Review
+from .models import Movie, Tournament, Genre, Review, Ott
 
 
 class GenreSerializer(serializers.ModelSerializer):
@@ -14,6 +14,12 @@ class MovieSerializer(serializers.ModelSerializer):
    
     class Meta : 
         model = Movie
+        fields="__all__"
+
+class OttSerializer(serializers.ModelSerializer):
+   
+    class Meta : 
+        model = Ott
         fields="__all__"
 
 
