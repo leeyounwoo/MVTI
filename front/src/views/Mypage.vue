@@ -10,14 +10,37 @@
             :src="`https://image.tmdb.org/t/p/original${win_movies[i].poster_path}`" alt="poster" style="width:100%; height:100%; cursor: pointer;" class="">
         </slide>
       </carousel-3d>
-      <h3>{{ first_name }}</h3>
-      <img :src="`${first_img}`" alt="poster" style="width:30%; height:30%;" class="">
-      <h3>{{ second_name }}</h3>
-      <img :src="`${second_img}`" alt="poster" style="width:30%; height:30%;" class="">
-      <h3>{{ third_name }}</h3>
-      <img :src="`${third_img}`" alt="poster" style="width:30%; height:30%;" class="">
+      <div class="d-flex" style="width: 200; height=270;">
+        <div>
+          <h3>{{ first_name }}</h3>
+          <img :src="`${first_img}`" alt="poster" style="width:100%; height:100%; cursor: pointer;">
+        </div>
+        <div>
+          <h3>{{ second_name }}</h3>
+          <img :src="`${second_img}`" alt="poster" style="width:100%; height:100%; cursor: pointer;">
+        </div>
+        <div>
+          <h3>{{ third_name }}</h3>
+          <img :src="`${third_img}`" alt="poster" style="width:100%; height:100%; cursor: pointer;">
+        </div>
+      </div>
     </div>
     
+    <h2 style="color: #fff;">구매한 OTT 서비스 계정</h2>
+    <div class="d-flex">
+
+      <ul v-for="recruit in recruits" :key="recruit.id">
+        <span class="m-2">
+          <!-- <p class="indent" style="font-size:17px">&ensp;<strong>{{review.user}}</strong></p> -->
+          <p><strong>OTT: {{recruit.ott_name}}</strong></p>
+          <p>ID: {{recruit.public_id}}</p>
+          <p>PW: {{recruit.public_pw}}</p>
+
+        </span>
+      </ul>
+    </div>
+    <div style="color: #fff;">마일리지: {{userInformation.money}}원</div>
+    <p>{{userInformation.phone}}</p>
   </div>
 </template>
 <script>
@@ -45,6 +68,8 @@ export default {
       win_movies : [],
       slides_2d: 0,
       count: 0,
+      recruits: [],
+      userInformation: '',
       first_name : '',
       first_img : '',
       second_name : '',
@@ -60,7 +85,6 @@ export default {
         url: `${BACKEND}movies/mypageMovie/${this.$route.params.username}`,
       })
         .then(res => {
-          console.log(res)
           this.win_movies = res.data.winMovies
           this.slides_2d = this.win_movies.length
           this.first_name = res.data.first_name
@@ -72,7 +96,36 @@ export default {
           console.log(this.win_movies)
         })
         .catch(() =>{
-          console.log(this.$route.params.username)
+          // console.log(this.$route.params.username)
+          alert("없는 회원 정보입니다.")
+          this.$router.push({name : 'Movies'})
+        })
+    },
+    getRecruits: function() {
+      console.log('OTT')
+      axios({
+        method: 'get',
+        url: `${BACKEND}recruits/mypageRecruit/${this.$route.params.username}`,
+      })
+        .then(res => {
+          this.recruits = res.data.myRecruits
+          // console.log(this.recruits)
+        })
+        .catch(() =>{
+          alert("없는 회원 정보입니다.")
+          this.$router.push({name : 'Movies'})
+        })
+    },
+    getUser: function() {
+      axios({
+        method: 'get',
+        url: `${BACKEND}accounts/mypageUser/${this.$route.params.username}`,
+      })
+        .then(res => {
+          this.userInformation = res.data
+          console.log(res.data)
+        })
+        .catch(() =>{
           alert("없는 회원 정보입니다.")
           this.$router.push({name : 'Movies'})
         })
@@ -91,6 +144,8 @@ export default {
   created : function(){
     this.loginCheck()
     this.getMovies()
+    this.getRecruits()
+    this.getUser()
   },
 }
 </script>

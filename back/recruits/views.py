@@ -17,6 +17,8 @@ from .serializers import CommentSerializer, RecruitSerializer
 from accounts.models import User
 import json
 import requests
+from django.contrib.auth import get_user_model
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -121,7 +123,7 @@ def comment_delete(request, recruit_pk, comment_pk):
 def pay(request, recruit_pk):
     recruit = Recruit.objects.get(pk=recruit_pk)
     if request.user == recruit.author:
-        return 'text'
+        return Response({'detail':'권한이 없습니다'}, status=status.HTTP_403_FORBIDDEN)
     if recruit.max_cnt <= recruit.current_cnt:
         return
 
@@ -139,9 +141,9 @@ def pay(request, recruit_pk):
         'total_amount': 3000,
         'vat_amount': 200,
         'tax_free_amount': 0,
-        'approval_url': f'http://localhost:8081/{recruit_pk}/approval',
-        'fail_url': 'http://localhost:8081/recruits/',
-        'cancel_url': 'http://localhost:8081/recruits/',
+        'approval_url': f'http://localhost:8080/{recruit_pk}/approval',
+        'fail_url': 'http://localhost:8080/recruits/',
+        'cancel_url': 'http://localhost:8080/recruits/',
     }
     response = requests.post(url+"/v1/payment/ready", params=params, headers=headers)
     response = json.loads(response.text)
@@ -157,6 +159,7 @@ def approval(request, recruit_pk):
     recruit.author.save()
     print(recruit.author.username, recruit.author.money)
     recruit.current_cnt += 1
+    recruit.user.add(request.user)
     recruit.save()
     
     recruit_serializer = RecruitSerializer(data=recruit)
@@ -168,3 +171,21 @@ def approval(request, recruit_pk):
         'ott' : recruit.ott_name,
     }
     return JsonResponse(context)
+
+
+@api_view(['GET'])
+def mypageRecruit(request, username) :
+    person = get_object_or_404(get_user_model(), username=username)
+    print(person)
+    recruits = Recruit.objects.filter(user=person).distinct() # OneToMany 접근
+    # likeMovies = Review.objects.filter(user=person).filter(liked=True).order_by('-created_at')
+    # likeMovies = Movie.objects.filter(review__user=person).distinct()
+    print(recruits)
+    myRecruitSerializer = RecruitSerializer(data = recruits, many=True)
+    # likeMoviesSerializer = MovieSerializer(data= likeMovies, many=True)
+
+    print(myRecruitSerializer.is_valid())
+    context = {
+        'myRecruits' : myRecruitSerializer.data, 
+    }
+    return Response(context)

@@ -66,7 +66,7 @@ export default {
       axios({
         method:'delete',
         url: `http://127.0.0.1:8000/recruits/delete/${this.$route.params.recruitId}/`,
-        headers: this.setToken(),
+        headers: this.setToken(this.token),
       })
         .then(() =>{
           this.$router.push({name:'Recruit'})
@@ -79,7 +79,7 @@ export default {
       axios({
         method:'get',
         url: `http://127.0.0.1:8000/recruits/update/${this.$route.params.recruitId}/`,
-        headers: this.setToken(),
+        headers: this.setToken(this.token),
       })
         .then((res) =>{
           console.log(res)

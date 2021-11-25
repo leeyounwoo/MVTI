@@ -1,8 +1,8 @@
-from mmap import ACCESS_COPY
-from rest_framework import status
+from rest_framework import serializers, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .serializers import UserSerializer
+from .serializers import UserSerializer, UserProfileSerializer
+
 from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
@@ -13,13 +13,13 @@ from django.http.response import JsonResponse
 import urllib, hashlib # gravatar library
 import json
 import time
+from .models import User
+
 @api_view(['POST'])
 def signup(request):
 	#1-1. Client에서 온 데이터를 받아서
     password = request.data.get('password')
     password_confirmation = request.data.get('passwordConfirmation')
-    email = request.data.get('email')
-    phone = request.data.get('phone')
 	#1-2. 패스워드 일치 여부 체크
     if password != password_confirmation:
         return Response({'error': '비밀번호가 일치하지 않습니다.'}, status=status.HTTP_400_BAD_REQUEST)
@@ -40,19 +40,16 @@ def signup(request):
 
 
 @api_view(['get'])
-@authentication_classes([JSONWebTokenAuthentication])
-@permission_classes([IsAuthenticated])
+# @authentication_classes([JSONWebTokenAuthentication])
+# @permission_classes([IsAuthenticated])
 def profile(request, username):    
     person = get_object_or_404(get_user_model(), username=username)
-        # Set your variables here
-    # email = person.email
-    # email_hash = hashlib.md5(request.user.email.encode('utf-8').strip().lower()).hexdigest() #gravatar hash 
+    print('휴대폰', person.phone)
     context ={
         'username': person.username,
         'email': person.email,
-        'created_at': person.date_joined,
-
-        # 'email_hash':email_hash,
+        'money': person.money,
+        'phone': person.phone,
     }
     return JsonResponse(context)
  

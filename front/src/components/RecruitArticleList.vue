@@ -50,6 +50,7 @@ export default {
       currentPage: 1,
       recruits : [
       ],
+      user: {},
       fields: [
         {
           key: 'ott_name',
@@ -95,6 +96,7 @@ export default {
         .then(res => {
           console.log(res)
           this.recruits = res.data
+          
         })
         .catch(err => {
           console.log(err)

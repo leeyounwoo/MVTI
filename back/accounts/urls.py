@@ -7,6 +7,6 @@ app_name = 'accounts'
 urlpatterns = [
     path('signup/', views.signup, name='signup'),
     path('login/', obtain_jwt_token),
-    path('<str:username>/', views.profile, name='profile'),
+    path('mypageUser/<str:username>/', views.profile, name='profile'),
 ]
  
