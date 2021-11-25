@@ -26,6 +26,9 @@
           
           <p class="indent" style="font-size:17px">&ensp;<strong>{{comment.username}}</strong></p>
         </div>
+        <p>
+          <strong>User{{ comment.author }}</strong> 
+        </p>
         <p>{{comment.content}}</p>
         <button @click="deleteRecruitComment(comment.id)" class="btn btn-dark btn-sm">삭제</button>
 
@@ -46,7 +49,7 @@ Vue.component('b-list-group', BListGroup)
 Vue.component('b-list-group-item', BListGroupItem)
 
 export default {
-  name:'RecruitListDetailComment',
+  name:'RecruitDetailComment',
   props:{
     commentSet :{
       type:Array
@@ -72,14 +75,14 @@ export default {
       return config
     },
     createComment: function () {
-      const newComment = {
+      const Comment = {
         content: this.newComment,
       }
       axios({
         method:'post',
         url: `http://127.0.0.1:8000/recruits/${this.recruitId}/comment/create/`,
-        data: newComment,
-        headers: this.setToken(),
+        data: Comment,
+        headers: this.setToken(this.token),
       })
         .then(res => {
           console.log(res)

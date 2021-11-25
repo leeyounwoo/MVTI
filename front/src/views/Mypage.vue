@@ -2,45 +2,77 @@
   <div class="main" style="padding-top:55px;">
     <!-- <userInformation/> -->
       
-    <div>
-      <h2 style="text-align: center; color: #B00084;">이상형 월드컵 우승작</h2><hr>
-      <carousel-3d :disable3d="true" :space="230" :display="5" :clickable="false" :controls-visible="true" :width="200" :height="270" :autoplay="true" :autoplay-timeout="3000">
-        <slide v-for="(slide_2d, i) in slides_2d" :key="i" :index="i">
-          <img 
-            :src="`https://image.tmdb.org/t/p/original${win_movies[i].poster_path}`" alt="poster" style="width:100%; height:100%; cursor: pointer;" class="">
-        </slide>
-      </carousel-3d>
-      <div class="d-flex" style="width: 200; height=270;">
-        <div>
-          <h3>{{ first_name }}</h3>
-          <img :src="`${first_img}`" alt="poster" style="width:100%; height:100%; cursor: pointer;">
+    <div class="container">
+      <div class="row">
+        <div class="col-2"></div>
+        <h2 style="color: #B00084;">이상형 월드컵 우승작</h2><hr>
+      </div>
+      <div class="row">
+        <carousel-3d :disable3d="true" :space="230" :display="5" :clickable="false" :controls-visible="true" :width="200" :height="270" :autoplay="true" :autoplay-timeout="3000">
+          <slide v-for="(slide_2d, i) in slides_2d" :key="i" :index="i">
+            <img 
+              :src="`https://image.tmdb.org/t/p/original${win_movies[i].poster_path}`" alt="poster" style="width:100%; height:100%; cursor: pointer;" class="">
+          </slide>
+        </carousel-3d>
+      </div>
+      <div class="row">
+        <div class="col-2"></div>
+        <h3 style="color: #B00084; ">OTT 서비스 추천 순위</h3>
+        <p style="font-weight: lighter;">영화 취향 분석을 통한 추천 영화가 가장 많은 순서대로 OTT 서비스를 추천합니다.</p>
+      </div>
+      <div class="row">
+        <div class="col-2"></div>
+        <div class="card-group col-8">
+          <div class="card">
+            <img :src="`${first_img}`" class="card-img-top" style="height: 200px;" alt="...">
+            <div class="card-body">
+              <h5 class="card-title" style="color: black;">{{ first_name }}</h5>
+            </div>
+          </div>
+          <div class="card">
+            <img :src="`${second_img}`" class="card-img-top" style="height: 200px;" alt="...">
+            <div class="card-body">
+              <h5 class="card-title" style="color: black;">{{ second_name }}</h5>
+            </div>
+          </div>
+          <div class="card">
+            <img :src="`${third_img}`" class="card-img-top" style="height: 200px;" alt="...">
+            <div class="card-body">
+              <h5 class="card-title" style="color: black;">{{ third_name }}</h5>
+            </div>
+          </div>
         </div>
-        <div>
-          <h3>{{ second_name }}</h3>
-          <img :src="`${second_img}`" alt="poster" style="width:100%; height:100%; cursor: pointer;">
+        <div class="col-2"></div>
+      </div>
+      <div class="row">
+        <div clas="col-2">
         </div>
+        <h2 style="color: #B00084;">구매한 OTT 서비스 계정</h2>
+      </div>
+      <div class="row">
+        <div class="col-2"></div>
+        <div v-if="recruits_length === 0">
+          <p>아직 구매한 계정이 없습니다</p>
+        </div>
+        <div class="d-flex">
+          <ul v-for="recruit in recruits" :key="recruit.id">
+            <span class="m-2">
+              <!-- <p class="indent" style="font-size:17px">&ensp;<strong>{{review.user}}</strong></p> -->
+              <p><strong>OTT: {{recruit.ott_name}}</strong></p>
+              <p>ID: {{recruit.public_id}}</p>
+              <p>PW: {{recruit.public_pw}}</p>
+            </span>
+          </ul>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-2"></div>
         <div>
-          <h3>{{ third_name }}</h3>
-          <img :src="`${third_img}`" alt="poster" style="width:100%; height:100%; cursor: pointer;">
+          <h2 style="color: #B00084;">마일리지</h2>
+          <div style="color: #fff; margin-left: 30px;">{{userInformation.money}}원</div>
         </div>
       </div>
     </div>
-    
-    <h2 style="color: #fff;">구매한 OTT 서비스 계정</h2>
-    <div class="d-flex">
-
-      <ul v-for="recruit in recruits" :key="recruit.id">
-        <span class="m-2">
-          <!-- <p class="indent" style="font-size:17px">&ensp;<strong>{{review.user}}</strong></p> -->
-          <p><strong>OTT: {{recruit.ott_name}}</strong></p>
-          <p>ID: {{recruit.public_id}}</p>
-          <p>PW: {{recruit.public_pw}}</p>
-
-        </span>
-      </ul>
-    </div>
-    <div style="color: #fff;">마일리지: {{userInformation.money}}원</div>
-    <p>{{userInformation.phone}}</p>
   </div>
 </template>
 <script>
@@ -147,6 +179,12 @@ export default {
     this.getRecruits()
     this.getUser()
   },
+  computed:{
+    recruits_length: function() {
+      return this.recruits.length
+    }
+  },
+
 }
 </script>
 
