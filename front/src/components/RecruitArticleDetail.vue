@@ -12,8 +12,7 @@
         <p >내용: {{ recruit.content }}</p>
         <br>
         <hr>
-        <button @click="goUpdateForm" class="btn btn-warning m-1">수정</button>
-        <button @click="deleteRecruitDetail" class="btn btn-dark m-1">삭제</button>
+        <button v-if="recruit.author == user" @click="deleteRecruitDetail" class="btn btn-dark m-1">삭제</button>
         <br><br><hr>
         <RecruitDetailComment 
           :commentCount="recruit.comment_count"
@@ -89,11 +88,11 @@ export default {
           alert('작성하신 글이 아닙니다.')
         })
     },
-    pay:function(recruit_pk){
+    pay:function(recruitId){
             let baseUrl = "http://127.0.0.1:8000/"
             // let form = new FormData()
-            this.$route.params.recruit_pk
-            axios.post(baseUrl+`recruits/${recruit_pk}/pay/`)
+            this.$route.params.recruitId
+            axios.post(baseUrl+`recruits/${recruitId}/pay/`)
             .then(res =>{
                 let payUrl = res.data.next_redirect_pc_url
                 console.log(res)

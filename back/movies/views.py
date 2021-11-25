@@ -127,9 +127,7 @@ def movie_detail(request, movie_pk) :
         movies += movies_same_genre
     similar_movies_serializer = MovieDetailSerializer(data = movies, many=True)
     print(serializer.is_valid(), similar_movies_serializer.is_valid())
-    print(serializer)
-    print(serializer.data)
-    print(type(serializer.data))
+
     context = {
         "movie" : serializer.data, 
         "similar_movies" : similar_movies_serializer.data,

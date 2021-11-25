@@ -1,7 +1,7 @@
 <template>
   <div class="background-img padding">
     <div class="overflow-auto">
-      <h1>OTT 모집 게시판</h1>
+      <h1 style="color: #fff;">OTT 모집 게시판</h1>
       <br><br>
       <b-table 
         striped 
@@ -113,6 +113,13 @@ export default {
   },
   created : function(){
     console.log('temp')
+    if (!this.token){
+      const res = {
+        name : 'Recruit'
+      }
+      this.setNextPage(res)
+      this.$router.push({name : 'Login'})
+    } 
     this.getRecruits()
   },
   
