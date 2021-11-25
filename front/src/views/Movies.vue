@@ -104,7 +104,7 @@ export default {
       disney_movies: [],
       hulu_movies: [],
       
-      // mvti_movies: [],
+      mvti_movies: [],
       popular_movies: [],
       // first_genre: '',
       // first_genre_movies: [],
@@ -115,9 +115,20 @@ export default {
     }
   },
   methods : {
+    setToken: function () {
+      const token = localStorage.getItem('jwt')
+      const config = {
+        Authorization: `JWT ${token}`,
+      }
+      return config
+    },
     getMovies : function() {
       const link = 'movies'
-      axios.get(BACKEND+link)
+      axios({
+          method: 'get',
+          url: BACKEND+link,
+          headers: this.setToken(this.token),
+      })
         .then(res =>{
           console.log(res.data.popular_movies[4].poster_path)
           console.log(res.data.netflix_movies)
@@ -126,7 +137,7 @@ export default {
           this.netflix_movies = res.data.netflix_movies
           this.disney_movies = res.data.disney_movies
           this.hulu_movies = res.data.hulu_movies
-          // this.mvti_movies = res.data.mvti_movies
+          this.mvti_movies = res.data.mvti_movies
           this.popular_movies = res.data.popular_movies
           // this.first_genre = res.data.first_genre
           // this.first_genre_movies = res.data.first_genre_movies
@@ -137,6 +148,26 @@ export default {
           alert(error)
           console.log(BACKEND+link)
         })
+      // axios.get(BACKEND+link, this.setToken(this.token))
+      //   .then(res =>{
+      //     console.log(res.data.popular_movies[4].poster_path)
+      //     console.log(res.data.netflix_movies)
+
+      //     this.selected_movies = res.data.netflix_movies
+      //     this.netflix_movies = res.data.netflix_movies
+      //     this.disney_movies = res.data.disney_movies
+      //     this.hulu_movies = res.data.hulu_movies
+      //     this.mvti_movies = res.data.mvti_movies
+      //     this.popular_movies = res.data.popular_movies
+      //     // this.first_genre = res.data.first_genre
+      //     // this.first_genre_movies = res.data.first_genre_movies
+      //     // this.secound_genre = res.data.secound_genre
+      //     // this.secound_genre_movies = res.data.secound_genre_movies
+      //   })
+      //   .catch(error=> {
+      //     alert(error)
+      //     console.log(BACKEND+link)
+      //   })
     },
     switchSlidMovie: function(select_movie) {
       let menuLinks = document.querySelectorAll('.ott-button')
