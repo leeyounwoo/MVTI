@@ -5,7 +5,7 @@
         <div class="imgBx"><img src="../assets/login/lock.jpg" alt="lockimg"></div>
         <div class="formBx">
           <form v-on:submit.prevent="login">
-            <h2>Sign In</h2>
+            <h2>로그인</h2>
             <input type="text" placeholder="Username" id="loginUsername" v-model="credentials.username">
             <input type="password" placeholder="Password" id="loginPassword" v-model="credentials.password">
             <input type="submit" placeholder="login" @click="login">
@@ -19,10 +19,10 @@
       <div class="user signupBx">
         <div class="formBx">
           <form v-on:submit.prevent="">
-            <h2>Create an account</h2>
+            <h2>회원가입</h2>
             <input type="text" placeholder="Username" id="createUsername" v-model="credentials.username">
             <input type="text" placeholder="Email Address" id="createEmail" v-model="credentials.email">
-            <input type="text" placeholder="Phone Number" id="createPhone" v-model="credentials.email">
+            <input type="text" placeholder="Phone Number" id="createPhone" v-model="credentials.phone">
             <input type="password" placeholder="create Password" id="createPassword" v-model="credentials.password">
             <input type="password" placeholder="Confirm Password" id="createPasswordConfirmation" v-model="credentials.passwordConfirmation">
             <input type="submit" placeholder="Sign Up" @click="signup(credentials)" @keyup.enter="signup(credentials)">

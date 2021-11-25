@@ -116,8 +116,15 @@ def comment_delete(request, recruit_pk, comment_pk):
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
+@authentication_classes([JSONWebTokenAuthentication])
 def pay(request, recruit_pk):
-    print(recruit_pk)
+    recruit = Recruit.objects.get(pk=recruit_pk)
+    if request.user == recruit.author:
+        return 'text'
+    if recruit.max_cnt <= recruit.current_cnt:
+        return
+
     url = "https://kapi.kakao.com"
     headers = {
         'Authorization': "KakaoAK " + "b76c688bcc686d6c8ef41ad79fca3b5e",

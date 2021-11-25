@@ -37,7 +37,7 @@ class ReviewSerializer(serializers.ModelSerializer):
         read_only_fields = ('user',)
 
 
-class MovieDetailSerializer(serializers.ModelSerializer): # 영화상세
+class MovieDetailSerializer(serializers.ModelSerializer):
     genres = GenreSerializer(many=True, read_only=True)
     review_set = ReviewSerializer(many=True, read_only=True)
 

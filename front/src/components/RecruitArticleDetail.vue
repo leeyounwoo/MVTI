@@ -92,15 +92,18 @@ export default {
             let baseUrl = "http://127.0.0.1:8000/"
             // let form = new FormData()
             this.$route.params.recruitId
-            axios.post(baseUrl+`recruits/${recruitId}/pay/`)
+            axios({
+              method:'post',
+              url: baseUrl+`recruits/${recruitId}/pay/`,
+              headers: this.setToken(this.token),
+            })      
             .then(res =>{
                 let payUrl = res.data.next_redirect_pc_url
                 console.log(res)
                 location.href = payUrl
             })
             .catch(() =>{
-                alert("에러가 발생했습니다. 다시 시도해주세요")
-                this.$router.push('/')
+                alert("에러가 발생했습니다!")
             })
         },
   },
