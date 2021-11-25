@@ -89,22 +89,23 @@ export default {
         })
     },
     pay:function(recruitId){
-      // console.log(`http://127.0.0.1:8000/recruits/${recruitId}/pay/`)
-      axios({
-        method: 'post',
-        url: `http://127.0.0.1:8000/recruits/${recruitId}/pay/`,
-        headers: this.setToken(this.token),
-      })
-        .then(res =>{
-            let payUrl = res.data.next_redirect_pc_url
-            console.log(res)
-            location.href = payUrl
-        })
-        .catch(() =>{
-            alert("자신의 게시글은 결제할 수 없습니다.")
-            this.$router.push('/')
-        })
-    },
+            let baseUrl = "http://127.0.0.1:8000/"
+            // let form = new FormData()
+            this.$route.params.recruitId
+            axios({
+              method:'post',
+              url: baseUrl+`recruits/${recruitId}/pay/`,
+              headers: this.setToken(this.token),
+            })      
+            .then(res =>{
+                let payUrl = res.data.next_redirect_pc_url
+                console.log(res)
+                location.href = payUrl
+            })
+            .catch(() =>{
+                alert("에러가 발생했습니다!")
+            })
+        },
   },
   created () {
     console.log('temp')
