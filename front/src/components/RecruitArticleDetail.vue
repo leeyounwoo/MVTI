@@ -66,7 +66,7 @@ export default {
       axios({
         method:'delete',
         url: `http://127.0.0.1:8000/recruits/delete/${this.$route.params.recruitId}/`,
-        headers: this.setToken(),
+        headers: this.setToken(this.token),
       })
         .then(() =>{
           this.$router.push({name:'Recruit'})
@@ -79,7 +79,7 @@ export default {
       axios({
         method:'get',
         url: `http://127.0.0.1:8000/recruits/update/${this.$route.params.recruitId}/`,
-        headers: this.setToken(),
+        headers: this.setToken(this.token),
       })
         .then((res) =>{
           console.log(res)
@@ -89,20 +89,22 @@ export default {
         })
     },
     pay:function(recruitId){
-            let baseUrl = "http://127.0.0.1:8000/"
-            // let form = new FormData()
-            this.$route.params.recruitId
-            axios.post(baseUrl+`recruits/${recruitId}/pay/`)
-            .then(res =>{
-                let payUrl = res.data.next_redirect_pc_url
-                console.log(res)
-                location.href = payUrl
-            })
-            .catch(() =>{
-                alert("에러가 발생했습니다. 다시 시도해주세요")
-                this.$router.push('/')
-            })
-        },
+      // console.log(`http://127.0.0.1:8000/recruits/${recruitId}/pay/`)
+      axios({
+        method: 'post',
+        url: `http://127.0.0.1:8000/recruits/${recruitId}/pay/`,
+        headers: this.setToken(this.token),
+      })
+        .then(res =>{
+            let payUrl = res.data.next_redirect_pc_url
+            console.log(res)
+            location.href = payUrl
+        })
+        .catch(() =>{
+            alert("자신의 게시글은 결제할 수 없습니다.")
+            this.$router.push('/')
+        })
+    },
   },
   created () {
     console.log('temp')

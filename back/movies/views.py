@@ -267,7 +267,7 @@ def mypageMovie(request, username) :
 
     winMoviesSerializer = MovieSerializer(data = winMovies, many=True)
     # likeMoviesSerializer = MovieSerializer(data= likeMovies, many=True)
-
+    print('이미지', first_img)
     print(winMoviesSerializer.is_valid(),)
     context = {
         'winMovies' : winMoviesSerializer.data,
