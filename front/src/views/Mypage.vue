@@ -11,7 +11,20 @@
         </slide>
       </carousel-3d>
     </div>
-    
+    <h2 style="color: #fff;">구매한 OTT 서비스 계정</h2>
+    <div class="d-flex">
+
+      <ul v-for="recruit in recruits" :key="recruit.id">
+        <span class="m-2">
+          <!-- <p class="indent" style="font-size:17px">&ensp;<strong>{{review.user}}</strong></p> -->
+          <p><strong>OTT: {{recruit.ott_name}}</strong></p>
+          <p>ID: {{recruit.public_id}}</p>
+          <p>PW: {{recruit.public_pw}}</p>
+
+        </span>
+      </ul>
+    </div>
+    <div style="color: #fff;">마일리지: {{userInformation.money}}원</div>
   </div>
 </template>
 <script>
@@ -39,7 +52,8 @@ export default {
       win_movies : [],
       slides_2d: 0,
       count: 0,
-      
+      recruits: [],
+      userInformation: '',
     }
   },
   methods : {
@@ -49,13 +63,40 @@ export default {
         url: `${BACKEND}movies/mypageMovie/${this.$route.params.username}`,
       })
         .then(res => {
-          console.log(res)
           this.win_movies = res.data.winMovies
           this.slides_2d = this.win_movies.length
-          console.log(this.win_movies)
         })
         .catch(() =>{
-          console.log(this.$route.params.username)
+          // console.log(this.$route.params.username)
+          alert("없는 회원 정보입니다.")
+          this.$router.push({name : 'Movies'})
+        })
+    },
+    getRecruits: function() {
+      console.log('OTT')
+      axios({
+        method: 'get',
+        url: `${BACKEND}recruits/mypageRecruit/${this.$route.params.username}`,
+      })
+        .then(res => {
+          this.recruits = res.data.myRecruits
+          // console.log(this.recruits)
+        })
+        .catch(() =>{
+          alert("없는 회원 정보입니다.")
+          this.$router.push({name : 'Movies'})
+        })
+    },
+    getUser: function() {
+      axios({
+        method: 'get',
+        url: `${BACKEND}accounts/mypageUser/${this.$route.params.username}`,
+      })
+        .then(res => {
+          this.userInformation = res.data
+          console.log(res.data)
+        })
+        .catch(() =>{
           alert("없는 회원 정보입니다.")
           this.$router.push({name : 'Movies'})
         })
@@ -74,6 +115,8 @@ export default {
   created : function(){
     this.loginCheck()
     this.getMovies()
+    this.getRecruits()
+    this.getUser()
   },
 }
 </script>

@@ -7,10 +7,22 @@
     <div class="col-4 p-5 bg-dark">
       <h3 class="text-center my-5">주문 정보</h3>
       <div>
-        <div class="my-3 row"><div class="h5 col-6">결제금액</div><div class="h6 col-6 text-right">{{ money }}원</div></div>
-        <div class="my-3 row"><div class="h5 col-6">OTT 서비스</div><div class="h6 col-6 text-right">{{ ott }}</div></div>
-        <div class="my-3 row"><div class="h5 col-6">공유 ID</div><div class="h6 col-6 text-right">{{ id }}</div></div>
-        <div class="my-3 row"><div class="h5 col-6">공유 PW</div><div class="h6 col-6 text-right">{{ pw }}</div></div> 
+          <div class="my-3 row">
+            <div class="h5 col-6" style="color: #fff;">결제금액</div>
+            <div class="h6 col-6 text-right" style="color: #fff;">{{ money }}원</div>
+          </div>
+          <div class="my-3 row">
+            <div class="h5 col-6" style="color: #fff;">OTT 서비스</div>
+            <div class="h6 col-6 text-right" style="color: #fff;">{{ ott }}</div>
+          </div>
+          <div class="my-3 row">
+            <div class="h5 col-6" style="color: #fff;">공유 ID</div>
+            <div class="h6 col-6 text-right" style="color: #fff;">{{ id }}</div>
+          </div>
+          <div class="my-3 row">
+            <div class="h5 col-6" style="color: #fff;">공유 PW</div>
+            <div class="h6 col-6 text-right" style="color: #fff;">{{ pw }}</div>
+          </div> 
       </div>
       <div class="mt-5 pt-3 text-center">
         <router-link :to="{name: 'Movies'}" class="btn btn-warning">메인으로 이동</router-link>
@@ -75,18 +87,5 @@ export default {
 .section {
   margin : 20px;
 }
-.section-header {
-  color : #ffffff;
-  margin-bottom: 30px;
-  padding-left: 20px;
-  text-transform: uppercase;
-  font-size: 2rem;
-  font-weight: 700;
-  border-left: 4px solid #c0392b;
-  display: flex;
-  align-items: center;
-}
-.else-movieslide {
-  color: #8A2BE2;
-}
+
 </style>

@@ -6,16 +6,18 @@ from rest_framework.fields import CharField
 
 # Create your models here.
 class Recruit(models.Model):
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     title = models.TextField()
     content = models.TextField()
-    created_at = DateTimeField(auto_now_add=True)
-    updated_at = DateTimeField(auto_now=True)
     max_cnt = IntegerField()
     current_cnt = IntegerField(default=1)
     public_id = models.TextField()
     public_pw = models.TextField()
     ott_name = models.TextField(default='unknown')
+    created_at = DateTimeField(auto_now_add=True)
+    updated_at = DateTimeField(auto_now=True)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, null=True, related_name='otts')
+    
     def __str__(self):
         return self.title
 

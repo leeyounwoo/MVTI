@@ -13,10 +13,5 @@ urlpatterns = [
     path('<int:recruit_pk>/comment/delete/<int:comment_pk>/', views.comment_delete),
     path('<int:recruit_pk>/pay/', views.pay, name='pay'),
     path('<int:recruit_pk>/pay/approval/', views.approval, name='approval'),
-    # path('<int:recruit_pk>/pay/', views.pay, name='pay'),
-    # path('<int:recruit_pk>/pay/approval/', views.approval, name='approval'),
-    # path('<int:recruit_pk>/pay/fail/', views.fail, name='fail'),
-    # path('<int:recruit_pk>/pay/cancel/', views.cancel, name='cancel'),
-    # path('<int:recruit_pk>/comments/create/', views.create_comment, name='create_comment'),
-    # path('<int:recruit_pk>/comments/<int:comment_pk>/delete/', views.delete_comment, name='delete_comment'),
+    path('mypageRecruit/<str:username>', views.mypageRecruit),
 ]
