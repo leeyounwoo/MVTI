@@ -6,9 +6,12 @@
     <div class="title">
       영화 추천을 위한 영화 이상형 월드컵 (16강)<br>
       
-      <span v-if="max_count>2">
+      <span v-if="max_count>4">
         16강&nbsp;&nbsp;&nbsp;
         {{ count }} / {{ max_count }}
+      </span>
+      <span v-else-if="max_count>2">
+        8강전 {{ count }} / {{ max_count }}
       </span>
       <span v-else-if="max_count>1">
         준결승전 {{ count }} / {{ max_count }}
@@ -95,9 +98,6 @@ export default {
           }else {
             const movie = this.movies.shift()
             this.postWinMovie(movie)
-
-
-
           }
           this.checkDouble = true
         }, 700);

@@ -14,43 +14,46 @@
               <a @click="switchSlidMovie(hulu_movies)" class="nav-link button-slider ott-button" data-menu="3">hulu</a>
             </h2>
             <h2>
-              <a @click="switchSlidMovie(mvti_movies)" class="nav-link button-slider ott-button" data-menu="4">내 MVTI 추천영화</a>
+              <a @click="switchSlidMovie('mvti_movies')" class="nav-link button-slider ott-button" data-menu="4">내 MVTI 추천영화</a>
             </h2>
           </ul>
         </div>
       </div>
     </nav>
-    
+
     <div>
-      <carousel-3d :autoplay="true" :autoplay-timeout="3000" :display="11" :width="400" :height="600" >
+      <carousel-3d 
+        :autoplay="true"
+        :autoplay-timeout="3000" 
+        :display="11" 
+        :width="400" 
+        :height="600" 
+      >
         <slide v-for="(slide, i) in slides" :key="i" :index="i">
           <div class="imggroup">
             <img 
               :src="`https://image.tmdb.org/t/p/original${selected_movies[i].poster_path}`"
-              alt="image"
               style="width:100%; height:100%; cursor: pointer;"
             >
-            <star-rating style="position: absolute; top: 0px; text-align: center; size: 50%;}" :rating="parseFloat(popular_movies[i].vote_average) / 2" :read-only="true" :increment="0.01"/>
-            <button 
-              class="imggroup-button1"
-              @click="goToMovieDetail(selected_movies[i])"
-            >Detail</button>
+            <star-rating 
+              style="position: absolute; top: 0px; text-align: center; size: 50%;}" 
+              :rating="parseFloat(popular_movies[i].vote_average) / 2" 
+              :read-only="true" 
+              :increment="0.01"
+            />
+            <button class="imggroup-button1" @click="goToMovieDetail(selected_movies[i])">Detail</button>
           </div>
-  
-            
-
         </slide>
       </carousel-3d>
     </div>
-    <br><br><br><br><br>
 
+    <br><br><br><br><br>
     <div>
       <h2 class="else-movieslide">인기 영화</h2><hr>
-      <carousel-3d :disable3d="true" :space="230" :clickable="false" :controls-visible="true" :width="200" :height="270" :autoplay="true" :autoplay-timeout="3000">
+      <carousel-3d :autoplay="true" :autoplay-timeout="3000" :display="7" :disable3d="true" :space="230" :clickable="false" :controls-visible="true" :width="200" :height="270" >
         <slide v-for="(slide_2d, i) in slides_2d" :key="i" :index="i">
           <img 
             :src="`https://image.tmdb.org/t/p/original${popular_movies[i].poster_path}`" 
-            alt="poster" 
             style="width:100%; height:100%; cursor: pointer;" 
             class="imggroup"
           >
@@ -84,6 +87,7 @@
 <script>
 import axios from 'axios'
 import StarRating from 'vue-star-rating'
+import { mapState } from 'vuex'
 
 import Vue from 'vue'
 import { Carousel3d, Slide } from 'vue-carousel-3d';
@@ -103,8 +107,7 @@ export default {
       netflix_movies : [],
       disney_movies: [],
       hulu_movies: [],
-      
-      // mvti_movies: [],
+      mvti_movies: [],
       popular_movies: [],
       // first_genre: '',
       // first_genre_movies: [],
@@ -114,19 +117,25 @@ export default {
       slides_2d: 15,
     }
   },
+  
   methods : {
+    setToken: function () {
+      const token = localStorage.getItem('jwt')
+      const config = {
+        Authorization: `JWT ${token}`,
+      }
+      return config
+    },
     getMovies : function() {
       const link = 'movies'
       axios.get(BACKEND+link)
         .then(res =>{
           console.log(res.data.popular_movies[4].poster_path)
           console.log(res.data.netflix_movies)
-
           this.selected_movies = res.data.netflix_movies
           this.netflix_movies = res.data.netflix_movies
           this.disney_movies = res.data.disney_movies
           this.hulu_movies = res.data.hulu_movies
-          // this.mvti_movies = res.data.mvti_movies
           this.popular_movies = res.data.popular_movies
           // this.first_genre = res.data.first_genre
           // this.first_genre_movies = res.data.first_genre_movies
@@ -136,6 +145,20 @@ export default {
         .catch(error=> {
           alert(error)
           console.log(BACKEND+link)
+        })
+    },
+    getMvtiMovies: function() {
+      console.log(this.$route.params.username)
+      axios({
+        method: 'get',
+        url: `${BACKEND}movies/mvti/`,
+        headers: this.setToken(this.token)
+      })
+        .then(res => {
+          this.mvti_movies = res.data
+        })
+        .catch(() => {
+          alert('로그인을 하지 않았습니다.')
         })
     },
     switchSlidMovie: function(select_movie) {
@@ -153,6 +176,9 @@ export default {
       for (let i= 0; i< menuLinks.length; i++){
         menuLinks[i].addEventListener('click', clickMenuHandler)
       }
+      if (select_movie === 'mvti_movies'){
+        this.getMvtiMovies()
+      }
       this.selected_movies = select_movie
       
     },
@@ -166,6 +192,11 @@ export default {
   },
   created : function(){
     this.getMovies()
+  },
+  computed : {
+    ...mapState([
+      'token'
+    ]),
   }
 }
 </script>

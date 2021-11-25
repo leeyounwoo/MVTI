@@ -44,7 +44,10 @@
             <h2><strong>영화 한줄평</strong></h2>
             <ul v-for="review in movie.review_set" :key="review.id">
               <span class="m-2">
-                <span class="h5 m-2">{{review.content}}</span>
+                <!-- <p class="indent" style="font-size:17px">&ensp;<strong>{{review.user}}</strong></p> -->
+                <span class="h5 m-2">
+                  <strong>User{{review.user}}</strong> 
+                  {{review.content}}</span>
                   <span>
                     <span class="text-warning" >
                       <i v-if="review.rating < 2" class="far fa-star"></i> 
@@ -107,8 +110,8 @@
       </div>
       <div class="main">
         <div>
-          <h2 class="else-movieslide">비슷한 컨텐츠</h2><hr>
-          <carousel-3d :disable3d="true" :space="230" :clickable="false" :controls-visible="true" :width="200" :height="270" :autoplay="true" :autoplay-timeout="3000">
+          <h2 class="else-movieslide" style="margin-left:400px;">비슷한 컨텐츠</h2><hr>
+          <carousel-3d :display="6" :disable3d="true" :space="230" :clickable="false" :controls-visible="true" :width="200" :height="270" :autoplay="true" :autoplay-timeout="3000" style="margin-left:50px;">
             <slide v-for="(slide_2d, i) in slides_2d" :key="i" :index="i">
               <img 
                 :src="`https://image.tmdb.org/t/p/original${similar_movies[i].poster_path}`" 
@@ -197,6 +200,7 @@ export default {
         content: this.reviewInput,
         rating: this.score,
       }
+
       axios({
         method: 'post',
         url: `${BACKEND}movies/${movieId}/review/create/`,
@@ -230,6 +234,7 @@ export default {
     },
   
   },
+
   created : function(){
     this.getMovie()
   },
@@ -268,7 +273,7 @@ export default {
   align-items: center;
 }
 .else-movieslide {
-  color: #8A2BE2;
+  color: #B93498;
 }
 
 .imggroup {

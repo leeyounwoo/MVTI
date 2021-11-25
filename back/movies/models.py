@@ -37,11 +37,11 @@ class Movie(models.Model):
     )
 
 class Review(models.Model):
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     rating = models.IntegerField()
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='movie_comments')
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='movie_comments')
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     
 class Tournament(models.Model) :
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='tournaments')
