@@ -121,8 +121,11 @@ def comment_delete(request, recruit_pk, comment_pk):
 @permission_classes([IsAuthenticated])
 @authentication_classes([JSONWebTokenAuthentication])
 def pay(request, recruit_pk):
-    if request.user.recruit_set.filter(pk=recruit_pk):
+    recruit = Recruit.objects.get(pk=recruit_pk)
+    if request.user == recruit.author:
         return Response({'detail':'권한이 없습니다'}, status=status.HTTP_403_FORBIDDEN)
+    if recruit.max_cnt <= recruit.current_cnt:
+        return
 
     url = "https://kapi.kakao.com"
     headers = {

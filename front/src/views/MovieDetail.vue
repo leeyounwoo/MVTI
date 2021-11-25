@@ -212,8 +212,8 @@ export default {
           this.reviewInput = ''
           this.score = 0
         })
-        .catch(() => {
-          alert('댓글을 입력해주세요')
+        .catch((e) => {
+          console(e)
         })
     },
     giveStarRating (num) {

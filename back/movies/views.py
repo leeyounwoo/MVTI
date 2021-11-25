@@ -219,6 +219,7 @@ def tournament(request) :
 @api_view(['GET'])
 def mypageMovie(request, username) :
     person = get_object_or_404(get_user_model(), username=username)
+    print(person.email, person.money, person.phone)
     winMovies = Movie.objects.filter(tournament__user=person).distinct() 
     if len(winMovies) == 0:
         first = Ott.objects.filter(pk=5)
