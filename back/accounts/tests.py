@@ -3,7 +3,7 @@ import hmac
 import base64
 import requests
 import time, json
-
+import random
 timestamp = int(time.time() *1000)
 timestamp = str(timestamp)
 
@@ -25,13 +25,14 @@ def make_signature(uri, access_key):
     signingKey = base64.b64encode(hmac.new(secret_key, message, digestmod=hashlib.sha256).digest())
     return signingKey
 
+auth_number = random.randint(1000, 10000)
 messages = { "to" : "01027781007"}
 body = {
     "type" : 'SMS',
     'contentType' : 'COMM',
     'from': '01027781007',
     'subject' : 'subject',
-    'content' : '하이요',
+    'content' : '인증번호 [{}]를 입력해주세요.'.format(auth_number),
     "messages" : [messages]
 }
 

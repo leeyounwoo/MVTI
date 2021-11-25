@@ -23,12 +23,13 @@
             <input type="text" placeholder="Username" id="createUsername" v-model="credentials.username">
             <input type="text" placeholder="Email Address" id="createEmail" v-model="credentials.email">
             <input type="text" placeholder="Phone Number" id="createPhone" v-model="credentials.phone">
-            <input type="password" placeholder="create Password" id="createPassword" v-model="credentials.password">
+            <button @click="confirm(credentials)">인증</button>
+            <input type="text" placeholder="Confirm Phone" id="createPhoneConfirm" v-model="credentials.numbers">
+            <button @click="confirm_num()">확인</button>
+            <p1>  {{ this.message }}</p1>
+            <input type="password" placeholder="Create Password" id="createPassword" v-model="credentials.password">
             <input type="password" placeholder="Confirm Password" id="createPasswordConfirmation" v-model="credentials.passwordConfirmation">
             <input type="submit" placeholder="Sign Up" @click="signup(credentials)" @keyup.enter="signup(credentials)">
-            <p class="signup">Already have an account? 
-              <a href="javascript:void(0);" @click="toggleForm">Sign in.</a>
-            </p>
           </form>
         </div>
         <div class="imgBx"><img src="../assets/login/signup.jpg" alt="signupimg"></div>
@@ -57,7 +58,7 @@ export default {
         password: null,
         passwordConfirmation: null,
         phone: null,
-        
+        message: '',
       },
     }
   },
@@ -141,8 +142,36 @@ export default {
       container.classList.toggle('active');
       section.classList.toggle('active');
     },
-
-
+    confirm:function(){
+            let baseUrl = "http://127.0.0.1:8000/"
+            axios({
+              method:'post',
+              url: baseUrl+`accounts/confirm/`,
+              data: this.credentials,
+            })      
+            .then(res =>{
+                console.log(res)      
+            })
+            .catch(() =>{
+                alert("인증번호가 발송되었습니다!")
+            })
+        },
+    confirm_num:function(){
+            let baseUrl = "http://127.0.0.1:8000/"
+            axios({
+              method:'post',
+              url: baseUrl+`accounts/confirm_num/`,
+              data: this.credentials,
+            })      
+            .then(res =>{
+                console.log(res.data)
+                this.message = res.data
+                    
+            })
+            .catch((e) =>{
+                alert(e)
+            })
+        },
   },
   created : function (){
     if (this.$store.state.token){
